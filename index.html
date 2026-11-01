@@ -1,0 +1,894 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Excuse me.</title>
+<meta name="description" content="Bear down.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="tokens.css?5">
+<style>
+body{margin:0;padding:clamp(1rem,5svh,3rem) 16px 1.4rem;min-height:100svh;box-sizing:border-box;display:flex;flex-direction:column;background:var(--paper);color:var(--ink);font:19px/1.5 var(--book);font-variant-numeric:oldstyle-nums}
+main,.by{width:100%;max-width:40rem;margin:0 auto}
+main{flex:1}
+p{margin:0}
+#cat{position:relative;margin:0;line-height:0;overflow:hidden;container-type:inline-size}
+#cat img{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#win{position:absolute;left:-3%;top:75.7%;width:26%;line-height:normal;transform-origin:50% 57.5%}
+/* the windbag: the print's coiled tail, washed in the gas's grey as the store fills */
+#bag{position:absolute;left:20.1%;top:57.5%;width:33.8%;height:30.1%;opacity:0;pointer-events:none;
+  background:radial-gradient(closest-side,#6b796d 70%,transparent);mix-blend-mode:multiply}
+/* words on scraps of the print's paper, in its ink: the kot's own, from its mouth; and
+   what is asked of it, from outside, at the height of its eyes */
+#kot,#ask{position:absolute;transform:translateY(-50%);margin:0;padding:.1em .35em;line-height:1.3;
+  font-size:max(12px,2.6cqw);font-style:italic;color:#523f35;background:#c5b896;transition:opacity .6s ease}
+#kot{right:25.5%;top:35.7%}
+#kot::after{content:"\00a0\2013"}
+#ask{right:38%;top:23.5%}
+#ask::before{content:"\2013\00a0"}
+.gone{opacity:0}
+canvas{display:block;width:100%;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#sec{aspect-ratio:2/1}
+#k{aspect-ratio:14/4.2}
+.knob[hidden]{display:none}
+.knob{margin-top:1rem;display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"l v b" "p p p" "lq w w" "q q q";align-items:baseline;gap:.2rem .8rem}
+.knob label{grid-area:l;font-variant-caps:all-small-caps;letter-spacing:.04em}
+.knob #lq{grid-area:lq;margin-top:.5rem}
+#p,#q{grid-area:p;width:100%;margin:0;accent-color:var(--acc)}
+#q{grid-area:q}
+#v,#w{grid-area:v;font-variant-numeric:lining-nums tabular-nums;text-align:right}
+#w{grid-area:w}
+button{font:inherit;background:none;border:0;padding:0;color:var(--acc);cursor:pointer}
+button:focus-visible{outline:1px solid var(--rule);outline-offset:4px}
+#push{grid-area:b;font-size:.85rem;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#push.on{color:var(--ink)}
+.label{margin-top:2rem;display:flex;justify-content:space-between;align-items:flex-end;gap:1rem}
+.label p{line-height:1.35}
+.label .l{margin-top:.5rem}
+.t{font-size:1.1rem}
+.m{font-variant-caps:all-small-caps;letter-spacing:.04em}
+.d{font-variant-numeric:lining-nums tabular-nums}
+#theme{font-size:.85rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+a{color:var(--acc);text-underline-offset:.15em}
+.by{margin-top:3rem;text-align:right;font-size:.8rem}
+/* schemes: the page in a glaze's wash, its accent the glaze's, in either theme; the dot
+   after the theme button wears the colour of the scheme to come */
+:root{--acc:var(--rust-accent,var(--ink))}
+html[data-scheme=rust]{--acc:var(--rust-accent)}html[data-scheme=rust] body{background:var(--rust-wash)}
+html[data-scheme=celadon]{--acc:var(--ru-accent)}html[data-scheme=celadon] body{background:var(--ru-wash)}
+html[data-scheme=jun]{--acc:var(--jun-accent)}html[data-scheme=jun] body{background:var(--jun-wash)}
+html[data-scheme=gold]{--acc:var(--gold-accent)}html[data-scheme=gold] body{background:var(--gold-wash)}
+.btns{display:flex;align-items:center;gap:.7rem}
+#glaze{width:.62em;height:.62em;border-radius:50%;background:var(--rust-base)}
+#glaze[data-next=paper]{background:var(--paper);box-shadow:0 0 0 1px var(--rule)}
+#glaze[data-next=celadon]{background:var(--ru-base)}#glaze[data-next=jun]{background:var(--jun-base)}
+#glaze[data-next=gold]{background:var(--gold-base)}
+/* radness, what the visit has earned, in five steps, each on top of the last: the page's
+   ground drifts through the glazes' washes; the print's colours sway; everything turns
+   slowly through the hues; the print rocks; all of it faster. Asked for less motion,
+   it tints and holds still */
+html.r1 body{animation:wash 24s linear infinite}
+@keyframes wash{0%,100%{background-color:var(--rust-wash)}25%{background-color:var(--ru-wash)}50%{background-color:var(--jun-wash)}75%{background-color:var(--gold-wash)}}
+html.r2 #cat img{animation:sway 9s ease-in-out infinite alternate}
+@keyframes sway{from{filter:hue-rotate(-25deg) saturate(1.2)}to{filter:hue-rotate(25deg) saturate(1.5)}}
+html.r3 main{animation:hues 40s linear infinite}
+@keyframes hues{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}
+html.r4 #cat{animation:rock 3.2s ease-in-out infinite alternate}
+@keyframes rock{from{transform:rotate(-1.2deg)}to{transform:rotate(1.2deg)}}
+html.r5 body{animation-duration:8s}html.r5 main{animation-duration:12s}html.r5 #cat img{animation-duration:3s}html.r5 #cat{animation-duration:1.4s}
+/* and the old desktops' screensavers behind the page, and the print warped (the script) */
+#saver{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;cursor:auto;display:none}
+html.r2 #saver{display:block}
+main,.by{position:relative;z-index:1}
+html.r3 #cat{filter:url(#warp)}
+@media (prefers-reduced-motion:reduce){html.r2 #saver{display:none}html.r3 #cat{filter:none}
+  html.r1 body,html.r1 main,html.r1 #cat,html.r1 #cat img{animation:none}
+  html.r1 body{background:var(--gold-wash)}html.r2 #cat img{filter:hue-rotate(25deg) saturate(1.3)}html.r3 main{filter:hue-rotate(60deg)}}
+/* narrow: the stage too, the print at the right, room under it for the lanes, and pads
+   to turn and to hold in place of keys */
+main{position:relative}
+#cat{width:min(58%,calc((100svh - 3rem)*1280/1647));margin:0 0 48% auto}
+#field{display:block;position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;cursor:auto}
+#score,#keys{display:none}
+#score:not([hidden]){display:block}
+.pads{display:flex;gap:.5rem;margin:0 0 .5rem}
+.pads[hidden]{display:none}
+.pads button{min-height:3rem;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+  font-variant-caps:all-small-caps;letter-spacing:.04em}
+.pads .turn{width:3rem;border:1px solid var(--rule);color:var(--ink)}
+.pads .pad{flex:1;min-width:0;padding:0 .2rem;font-size:min(1em,3.9vw);letter-spacing:.02em;color:#f6eddc}
+.pads .p0{background:#6b796d}.pads .p1{background:#baac6c;color:#523f35}.pads .p2{background:#a95330}
+#keys summary{cursor:pointer;color:var(--acc);font-variant-caps:all-small-caps;letter-spacing:.04em}
+#keys dl{display:grid;grid-template-columns:auto 1fr;gap:.15rem 1rem;margin:.5rem 0 0}
+#keys dt{font-variant-caps:all-small-caps;letter-spacing:.04em}
+#keys dd{margin:0}
+#keys .how{margin:.5rem 0 .2rem;max-width:22rem}
+kbd{display:inline-block;min-width:1.3em;padding:0 .3em;border:1px solid var(--rule);border-radius:3px;text-align:center;
+  font:inherit;font-variant-caps:normal;letter-spacing:0;line-height:1.45;box-shadow:0 2px 0 var(--rule)}
+kbd.k0{background:#6b796d;border-color:#6b796d;color:#f6eddc}
+kbd.k1{background:#baac6c;border-color:#baac6c;color:#523f35}
+kbd.k2{background:#a95330;border-color:#a95330;color:#f6eddc}
+kbd.on{transform:translateY(2px);box-shadow:none;outline:2px solid var(--ink);outline-offset:1px}
+.howto{margin:0 0 .4rem;font-size:.85rem;line-height:1.35}
+#score{position:relative;z-index:1;margin:0 0 .5rem;padding:.5em .8em;font-style:italic;line-height:1.4;
+  font-size:.85rem;color:#523f35;background:#c5b896}
+/* wide: the stage. The print high at the right, the label under it, the knobs at the
+   top left; the field, where the lanes run back from the bum, under and beside it all */
+@media (min-width:48rem) and (min-aspect-ratio:1/1) and (min-height:34rem){
+  body{--plate:min(calc((100svh - 18rem)*1280/1647),calc(100vw - 32px - 24rem))}
+  main,.by{max-width:none}
+  main{display:grid;grid-template-columns:1fr var(--plate);grid-template-rows:auto 1fr;gap:0 3rem}
+  #cat{grid-column:2;grid-row:1;width:auto;margin:0}
+  .pads,.howto{display:none}
+  .side{grid-column:1;grid-row:1;max-width:24rem;position:relative;z-index:1}
+  .label{grid-column:2;grid-row:2;margin-top:1rem;position:relative;z-index:1}
+  .knob{margin-top:0}
+  #score{position:absolute;left:8%;top:52%;margin:0;font-size:inherit}
+  #keys{display:block;margin-top:1.6rem;font-size:.85rem;line-height:1.4}
+  .by{margin-top:1.5rem}
+}
+</style>
+</head>
+<body>
+<svg class="sr" aria-hidden="true" focusable="false"><filter id="warp"><feTurbulence id="turb" type="fractalNoise" baseFrequency=".006 .01" numOctaves="2" seed="7"/><feDisplacementMap id="disp" in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<canvas id="saver" aria-hidden="true"></canvas>
+<main>
+<figure id="cat">
+<img src="cat.webp" width="1280" height="1647" draggable="false" alt="A hand-coloured Russian woodcut: a great striped cat sits looking out with round orange eyes, its tail curled in a red spiral on its haunch, flowers about it. The caption reads: Kot Kazanskoi, a um Strakhanskoi, razum Sibirskoi, slavno zhil, slatko el, slapko bzdel. The Cat of Kazan, with the mind of Astrakhan and the wit of Siberia, lived grandly, ate sweetly, farted weakly.">
+<div id="bag"></div>
+<div id="win" hidden>
+<canvas id="sec" role="img" aria-label="The valve in section, shut."></canvas>
+<canvas id="k" role="img" aria-label="Its outlet over time: shut."></canvas>
+</div>
+<p id="kot" class="gone" aria-live="polite"></p>
+<p id="ask" class="gone" aria-live="polite"></p>
+</figure>
+<canvas id="field" aria-hidden="true"></canvas>
+<p id="score" aria-live="polite" hidden></p>
+<p class="howto">Turn the bum down a mouse&rsquo;s lane and, as it reaches its ring, hold its colour.</p>
+<div class="pads" id="pads" hidden>
+<button class="turn" data-k="h" aria-label="turn counter-clockwise">&larr;</button>
+<button class="turn" data-k="l" aria-label="turn clockwise">&rarr;</button>
+<button class="pad p0" data-k="s">teal</button><button class="pad p1" data-k="d">yellow</button><button class="pad p2" data-k="f">red</button>
+</div>
+<div class="side">
+<div class="knob" id="knob" hidden>
+<label for="p">pressure</label>
+<span id="v">54.00 cm&nbsp;H<sub>2</sub>O</span>
+<input id="p" type="range" min="0" max="1" step="0.0005" value="0.321" autocomplete="off">
+<button id="push">hold</button>
+<label for="q" id="lq">tension</label>
+<span id="w">1.00&times;</span>
+<input id="q" type="range" min="0.6" max="1.5" step="0.01" value="1" autocomplete="off">
+</div>
+<details id="keys" open><summary>how to play</summary>
+<p class="how">Mice walk the lanes to a song. Turn the bum down a mouse&rsquo;s lane and, as it reaches its ring, hold the key of its colour.</p>
+<dl><dt><kbd id="cap-s" class="k0">s</kbd> <kbd id="cap-d" class="k1">d</kbd> <kbd id="cap-f" class="k2">f</kbd></dt><dd>hold to fart teal, yellow, red; another while held changes it</dd>
+<dt><kbd id="cap-h">&larr;</kbd> <kbd id="cap-l">&rarr;</kbd> &nbsp;h l</dt><dd>turn the bum</dd>
+<dt><kbd id="cap-space">space</kbd></dt><dd>hold to fart at the knob&rsquo;s push</dd>
+<dt><kbd id="cap-k">&uarr;</kbd> <kbd id="cap-j">&darr;</kbd> &nbsp;k j</dt><dd>the push; with shift, the tension</dd></dl></details>
+<p class="sr" id="s" aria-live="polite"></p>
+</div>
+<div class="label">
+<div>
+<p class="t">bumsf.art</p>
+<p class="m" id="what">a valve, shut</p>
+<p class="m" id="tally" aria-live="polite" hidden></p>
+<p class="m" id="smell" aria-live="polite" hidden></p>
+<p class="m" id="herd" hidden></p>
+<p class="m" id="rad" aria-live="polite" hidden></p>
+<p>2026</p>
+<p class="d"><span id="self">&ndash;</span> bytes</p>
+<p class="l">Bear down.</p>
+</div>
+<span class="btns"><button id="theme" hidden>dark</button><button id="glaze" hidden></button></span>
+</div>
+</main>
+<p class="by">the cat from D. A. Rovinskii, <i>Russkiia narodnyia kartinki</i> (1881), no.&nbsp;172; New York Public Library<br>by <a href="https://github.com/bonchicbongenre/bdeo">bonchicbongenre</a></p>
+<script>
+// One soft valve, shut at rest. Its wall is a mass on a spring, per unit area of the
+// face the air passes, with a wave running along it (Titze 1988, as Lucero 1999 writes
+// it): the inlet edge leads, the outlet lags. At rest the outlet edges overlap, so the
+// pressure behind must push them apart before any air goes. Stepped at 384 kHz. Its
+// damping is not the vocal folds' 1000 but 580: the most at which a person's passage,
+// pushed at rest, is four-fifths tone; at the folds' it is out before a tone can grow.
+const{abs,sqrt,PI,max,min,round,floor}=Math,$=i=>document.getElementById(i),
+  RATE=384000,DT=1/RATE,CM=98.0665,
+  m=4.76,r=580,kw0=2e6,l=.014,t=.003,rho=1.15,k0=1.3,kc=3*kw0,
+  tau=PI/3/(2*sqrt(kw0/m)),x02=-(51.5*CM)/kw0,x01=-x02;
+// Tension stiffens the wall and nothing else: the rest shape, the mass, the damping,
+// the wave and the contact stay as they are, so a tenser valve takes more to open.
+let kw=kw0;
+
+// the pressure on the wall at (x, v), and the flow through (left in U)
+let U=0,X=0,V=0;
+const pg=(ps,x,v)=>{
+  const a1=2*l*(x01+x+tau*v),a2=2*l*(x02+x-tau*v);
+  U=0;
+  if(a1<=0)return 0;
+  if(a2<=0)return ps*(a1/(a1-a2));          // shut at the outlet: the pressure reaches where the walls meet
+  let a0=a2,zf=1;
+  if(a2>k0*a1){a0=k0*a1;zf=(a0-a1)/(a2-a1)} // the jet leaves the wall inside
+  if(ps>0)U=a0*sqrt(2*ps/rho);
+  return ps*zf*(1-a0/a1)},
+  fc=x=>{const o=-(x02+x);return o>0?kc*o:0},
+  acc=(ps,x,v)=>(pg(ps,x,v)+fc(x)-r*v-kw*x)/m,
+  step=ps=>{const h=DT,x=X,v=V,
+    k1x=v,k1v=acc(ps,x,v),
+    k2x=v+.5*h*k1v,k2v=acc(ps,x+.5*h*k1x,v+.5*h*k1v),
+    k3x=v+.5*h*k2v,k3v=acc(ps,x+.5*h*k2x,v+.5*h*k2v),
+    k4x=v+h*k3v,k4v=acc(ps,x+h*k3x,v+h*k3v);
+    X=x+h/6*(k1x+2*k2x+2*k3x+k4x);V=v+h/6*(k1v+2*k2v+2*k3v+k4v)};
+
+// where it rests under ps, contact and all
+const rest=ps=>{const f=x=>pg(ps,x,0)+fc(x)-kw*x;
+  let lo=-x01-x01-1e-3,hi=ps/kw+x01+x01+1e-3;
+  for(let i=0;i<200;i++){const c=.5*(lo+hi);f(c)>0?lo=c:hi=c}return .5*(lo+hi)};
+
+// the thresholds, from the wall's own linear motion: it opens where the pressure on
+// its face meets its preload, and sounds where the flow's push in time with it
+// outweighs its damping
+const D=x01-x02,
+  openRest=ps=>.5*(-x01+sqrt(x01*x01+4*ps*D/kw)),
+  pull=ps=>{const xs=openRest(ps),d=x01+xs;return ps*tau*(x01+x02+2*xs)/(d*d)},
+  // the knob's ceiling at each tension: where the folds' valve, held without end, let
+  // its wave outgrow the gap it is drawn from; between two tensions, the lower; below
+  // rest, the rest's. This valve never holds without end: pushing out one passage, its
+  // wave stays under a quarter of the gap up to this line at every tension from 0.6
+  // to 1.5, measured. Past 1.5 times less than 5 cm of water lay between opening and
+  // the line, so the tension stops at 1.5.
+  TOPS=[[1,7918.852662180696],[1.1,8015.551652045304],[1.2,8066.358547406628],
+    [1.3,8206.940218749998],[1.4,8272.5957405],[1.5,8333.2008375]];
+let P_OPEN=0,P_TONE=0,TOP=0,BOTTOM=0;
+const tense=s=>{kw=kw0*s;P_OPEN=kw*max(0,-x02);
+  let lo=P_OPEN,hi=max(lo,1);while(pull(hi)<r)hi*=2;
+  for(let i=0;i<200;i++){const c=.5*(lo+hi);pull(c)<r?lo=c:hi=c}
+  P_TONE=.5*(lo+hi);
+  let i=0;while(i+1<TOPS.length&&TOPS[i+1][0]<=s)i++;
+  TOP=i+1<TOPS.length&&s>TOPS[i][0]?min(TOPS[i][1],TOPS[i+1][1]):TOPS[i][1];
+  // the knob begins a centimetre of water short of opening, so that the gentlest
+  // pushes, where a passage goes out unheard, are all within reach
+  BOTTOM=P_OPEN-CM};
+tense(1);
+
+// The gas: one passage at a time, drawn as people pass them (Suarez, Springfield and
+// Levitt 1998, Table 1: 107 ml a passage, and its three sulphur gases, over 87
+// passages). Each is lognormal with the table's mean and spread (an estimate of shape);
+// hydrogen sulphide and methanethiol go against each other, as the share of passages in
+// which methanethiol leads (22%, p. 102) asks of two lognormals (a correlation of
+// -0.56). A new passage joins what is left when a press begins; the page skips the
+// hours a real one takes. The push on the gas is the knob's; over the store's last
+// fifth it tapers to nothing (an estimate), so the valve shuts with some gas still in.
+// Every gas a passage lets out is counted toward its smell.
+const TAPER=.2,RHO=-.5642,
+  // each gas: its lognormal (umol/l), its odour threshold (ppm; Nagata, Table 2), and
+  // what it smells of (Suarez, p. 102)
+  GASES=[[-.6469,1.1876,.00041,"rotten eggs"],[-2.273,1.1936,.00007,"decomposing vegetables"],[-2.9549,.9265,.003,"sweet"]],
+  VM=8.314462618*298.15/101325*1000; // litres a mole, 25 C, 1 atm
+// the draws: Marsaglia's xorshift from his own example seed (a seed of 1 starts with
+// numbers so small that the first passage came out at 1.4 litres)
+const LUCK=2463534242;
+let luck=LUCK,store=0,V0=0,PE=0,dvs=[0,0,0],outs=[0,0,0];
+// what is said, each kind in turn, from the first: asked of a ninja'd fart; owned by the
+// kot; exclaimed at by the other; a run named; and the mice's, liking a fart of the
+// wrong colour, and, sometimes, blown away
+const LINES={asked:["did you fart?","was that you?","kot, what was that?","do you smell that?","hm?"],
+    owned:["bobo farted","that was bobo","bobo did it","bobo begs pardon","pardon bobo"],
+    aghast:["bobo!","bobo, really?","oh, bobo","bobo, the guests!","bobo, please"],
+    named:["stinky bobo","stinky, stinky bobo","bobo stinks","the stinkiest bobo"],
+    liked:["ah, i like your farts, kot","mm, the bouquet of it","again, kot, again","is this one for me?","how warm, how kind"],
+    died:["oh no, a stinky fart!","the air, the air!","tell my mother","not like this","i regret nothing"]},
+  turns={},words=k=>{const i=turns[k]||0;turns[k]=i+1;return LINES[k][i%LINES[k].length]};
+// the kot's coin, apart from the passages' draws and the hiss, so that neither moves
+// when it is tossed: the same generator, seeded with the w of his xor128 example; a
+// toss comes up heads p of the time (a let, as passage is, so that it can be scripted)
+let talk=88675123,
+  coin=p=>{talk^=talk<<13;talk^=talk>>>17;talk^=talk<<5;talk>>>=0;return talk<p*4294967296};
+const uni=()=>{luck^=luck<<13;luck^=luck>>>17;luck^=luck<<5;luck>>>=0;return(luck+1)/4294967297},
+  gauss=()=>sqrt(-2*Math.log(uni()))*Math.cos(2*PI*uni());
+// a passage: its volume (m^3; one over half a litre, 3 in 1,000, is drawn again: 87
+// passages at Suarez's mean and spread would hardly hold one, and this valve rings
+// louder the more it is given, so the largest sets the page's one level for all) and
+// its gases (umol/l)
+let passage=()=>{let v;do v=Math.exp(4.4706+.636*gauss())*1e-6;while(v>5e-4);
+  const z=[gauss(),gauss(),gauss()];
+  return[v,[Math.exp(GASES[0][0]+GASES[0][1]*z[0]),Math.exp(GASES[1][0]+GASES[1][1]*(RHO*z[0]+sqrt(1-RHO*RHO)*z[1])),Math.exp(GASES[2][0]+GASES[2][1]*z[2])]]};
+// each gas held as the air it would take to dilute it to its threshold (m^3). A new
+// passage comes only once the last has gone out, down to its tapered fifth; and each
+// clench (below) draws one more in on top, until the store holds a litre: the windbag
+// (an estimate, and a game's)
+const BAG=1e-3,
+  draw=()=>{const[v,c]=passage();store+=v;V0=store;for(let g=0;g<3;g++)dvs[g]+=c[g]*VM/GASES[g][2]*v},
+  fill=()=>{if(store<=TAPER*V0)draw()};
+
+// the flow from the wall let go at x = 0 under a steady ps, at any rate: sample n of
+// `rate` sits at n*RATE/rate, between two of the wall's own steps
+const flow=(ps,rate,n,gain)=>{X=0;V=0;pg(ps,0,0);let u0=U,u1=U,steps=0;
+  const o=new Float32Array(n);
+  for(let i=0;i<n;i++){const pos=i*RATE,j=floor(pos/rate),rem=pos%rate;
+    while(steps<j+1){step(ps);steps++;u0=u1;pg(ps,X,V);u1=U}
+    o[i]=gain*(u0+(u1-u0)*(rem/rate))}
+  return o};
+
+// The world: the valve in time. Held, the pressure behind it rises toward the knob's
+// level; let go, it falls (over about a quarter of a second up and a sixth down:
+// estimates); while a game is on, over a twentieth of a second both ways (a game's
+// speed, not a body's, so that a song can be kept up with). Every eighth step, 48,000
+// times a second, the valve's state is kept for half a second; the pictures look back
+// into that.
+const G8=8,GRID=RATE/G8,HN=GRID/2,RISE=.25,FALL=.15,QUICK=.05,
+  hx=new Float64Array(HN),hv=new Float64Array(HN),hp=new Float64Array(HN);
+let n=0,P=0,target=54*CM,held=false,queue=[],du0=0,du1=0,s0=0,s1=0,w=0,seed=1,
+  fart=false,rasp=0,shut=0,ninja=0,heard=0,puffs=[],wall=0,run=0,ended=-Infinity,quip="",by="",quips=0,clench=false,clenched=0,peak=0;
+const keep=()=>{const g=n/G8%HN;hx[g]=X;hv[g]=V;hp[g]=PE},
+  // what is heard: the rate of change of the flow, which is what a small source
+  // radiates, and over it the hiss of the jet, white, in proportion to the flow (an
+  // estimate); a new hiss value 48,000 times a second. One fixed gain, one fixed level
+  // over it, and one fixed soft limit (tanh) holding every peak under -1 dBFS: set so a
+  // passage at Suarez's mean, pushed at 60 at rest, peaks near -6 dBFS, the loudest
+  // (0.338 before the level: the most a passage leaves, 0.625 litre, pushed at the top
+  // at rest) rounded into the limit, a whisper still a whisper.
+  GAIN=.04,HISS=13,LEVEL=12,LIMIT=10**(-1/20),
+  // heard: within 30 dB of this valve's loudest, 0.184, its top held without a store
+  HEARD=.184*10**-1.5,
+  tick=()=>{
+    // a press: one that pushes to within 2 cm of water of opening, a risk taken, and
+    // lets no air through before its push falls away, or before the next press, was a
+    // clench, and draws another passage into the windbag
+    while(queue.length&&queue[0][0]<=n){const on=queue.shift()[1];
+      if(on&&!held){if(clench)heldIn();clench=true;peak=0;if(!fart)fill()}held=on}
+    const goal=held?target:0;
+    P+=(goal-P)*(DT/(march?QUICK:goal>P?RISE:FALL));
+    PE=V0>0?P*min(1,store/(TAPER*V0)):0;
+    step(PE);n++;pg(PE,X,V);du0=du1;du1=U;peak=max(peak,PE);
+    if(U>0)clench=false;else if(clench&&!held&&P<1)heldIn();
+    // the gas going out takes its share of each smell with it
+    const out=min(store,U*DT);
+    if(out>0){const f=out/store;for(let g=0;g<3;g++){const o=dvs[g]*f;dvs[g]-=o;outs[g]+=o}store-=out}
+    // a fart: from the first air through until, let go, the outlet has stayed shut 20 ms
+    // (longer than a cycle). Heard if the rasp in its sound, the flow's rate of change,
+    // came within 30 dB of the valve's loudest; ninja'd if only its hiss did. What it let
+    // out goes to the nose. One that begins within 2 s of the last one's end runs on
+    // from it (an estimate); what is said of it, and by whom: the third of a run, half
+    // the time, the kot names; a ninja'd one the other asks after; a heard one the kot
+    // owns a quarter of the time, the other exclaims at an eighth, and no one says
+    // anything the rest.
+    if(U>0&&!fart){fart=true;rasp=shut=0;outs=[0,0,0];run=n-ended<=2*RATE?run+1:1}
+    if(fart){rasp=max(rasp,abs(GAIN*(du1-du0)*RATE));
+      shut=U>0?0:shut+1;
+      if(!held&&shut>=.02*RATE){fart=false;rasp>=HEARD?heard++:ninja++;ended=n;
+        [by,quip]=run>=3&&coin(.5)?["kot",words("named")]:rasp<HEARD?["ask",words("asked")]
+          :coin(.25)?["kot",words("owned")]:coin(1/6)?["ask",words("aghast")]:["",""];
+        if(quip)quips++;
+        puffs.push([wall+(n-from)/RATE,outs]);outs=[0,0,0]}}
+    if(n%G8==0){seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;seed>>>=0;w=seed/2147483648-1;keep()}
+    s0=s1;s1=LIMIT*Math.tanh(LEVEL*(GAIN*(du1-du0)*RATE+HISS*du1*w))},
+  heldIn=()=>{if(peak>=P_OPEN-2*CM){clenched++;if(store<BAG)draw()}clench=false},
+  still=()=>!held&&!queue.length&&P<1&&x02+X<=0&&abs(V)<1e-4,
+  // the wall settled where it rests under no push, and the kept past set to it
+  settle=()=>{X=rest(0);V=0;pg(0,X,V);du0=du1=U;for(let g=0;g<HN;g++){hx[g]=X;hv[g]=V;hp[g]=0}},
+  reset=()=>{n=0;P=PE=0;held=false;queue=[];s0=s1=0;w=0;seed=1;luck=LUCK;fart=false;rasp=shut=0;run=0;ended=-Infinity;clench=false;peak=0;
+    store=V0=0;dvs=[0,0,0];outs=[0,0,0];settle()};
+reset();
+
+// The nose. A fart's gas goes out at once into a room's stirred air and spreads as an
+// instantaneous point source (Carslaw 1921, p. 150, Eq. 1), with one diffusivity for the
+// room, the middle of 0.001 to 0.013 m^2/s (Cheng et al. 2011, an estimate). At its
+// middle, at time t after, each gas stands at its threshold times
+// D V / (4 pi K t)^(3/2), and every fart adds its own. The smell is the gas that stands
+// highest; it is gone when none stands above its threshold. A fart that can be smelt a
+// metre away, D V at least (2 pi e / 3)^(3/2) m^3, is vonyuchaya.
+const KD=sqrt(.001*.013),FAR=(2*PI*Math.E/3)**1.5,
+  smell=t=>{const e=[0,0,0];
+    for(const[t0,dv]of puffs)if(t>t0)for(let g=0;g<3;g++)e[g]+=dv[g]/(4*PI*KD*(t-t0))**1.5;
+    let lead=0;for(let g=1;g<3;g++)if(e[g]>e[lead])lead=g;
+    const von=puffs.some(([t0,dv])=>t>t0&&max(...dv)>=FAR&&max(...dv)/(4*PI*KD*(t-t0))**1.5>=1);
+    return{e:e[lead],lead,von}};
+// the label's last word on it: what it smells of, shown in full while the middle of the
+// cloud stands a thousand times over threshold and fading to nothing as it falls to
+// once over (the word's strength the logarithm of the excess, an estimate)
+let sniffing=0;
+const sniff=()=>{const t=performance.now()/1e3,el=$("smell");
+  puffs=puffs.filter(([t0,dv])=>t<=t0||max(...dv)/(4*PI*KD*(t-t0))**1.5>=1e-3);
+  const{e,lead,von}=smell(t);
+  if(e>=1){const said=(von?"<i>vonyuchaya</i>, ":"")+GASES[lead][3];
+    if(el.innerHTML!=said)el.innerHTML=said;
+    el.style.opacity=min(1,Math.log10(e)/3).toFixed(3);el.hidden=false}
+  else el.hidden=true;
+  clearTimeout(sniffing);if(puffs.length)sniffing=setTimeout(sniff,200)};
+
+// a stream of sound from the world, sample a of `rate` at a*RATE/rate past the
+// stream's first step: the same sound at any rate, cut into any chunks. 4 ms in.
+let rate=48000,ai=0,from=0;
+const begin=r=>{rate=r;ai=0;from=n;s0=s1=0;wall=performance.now()/1e3+.02},
+  pour=k=>{const o=new Float32Array(k),fade=.004*rate;
+    for(let i=0;i<k;i++,ai++){const pos=ai*RATE,j=floor(pos/rate),rem=pos%rate;
+      while(n-from<j+1)tick();
+      o[i]=(s0+(s1-s0)*(rem/rate))*min(1,ai/fade)}
+    return o};
+
+// sound only while held, or while the valve still moves after; scheduled a little ahead
+const AC=window.AudioContext||window.webkitAudioContext,AHEAD=.06;
+let ac=null,t0=0,asleep=true,timer=0;
+const clock=()=>(ac?ac.currentTime:performance.now()/1e3)-t0,
+  pump=()=>{clearTimeout(timer);
+    const want=round((clock()+AHEAD)*rate);
+    if(want>ai){const a=ai,o=pour(want-ai);
+      if(ac){const b=ac.createBuffer(1,o.length,rate);b.getChannelData(0).set(o);
+        const s=ac.createBufferSource();s.buffer=b;s.connect(ac.destination);s.start(t0+a/rate)}}
+    if(still())asleep=true;else timer=setTimeout(pump,15);
+    ask()},
+  hold=on=>{
+    if(on&&asleep){ac=ac||(AC?new AC():null);if(ac)ac.resume();
+      t0=(ac?ac.currentTime:performance.now()/1e3)+.02;begin(ac?ac.sampleRate:48000);asleep=false}
+    queue.push([n,on]);$("push").className=on?"on":"";
+    // on the stage, a press brings the procession on, or keeps it coming
+    if(on&&FIELD.offsetParent)startMarch();
+    if(!asleep)pump()};
+const B=$("push");
+B.onpointerdown=e=>{e.preventDefault();B.setPointerCapture&&B.setPointerCapture(e.pointerId);hold(true)};
+B.onpointerup=B.onpointercancel=()=>hold(false);
+B.onkeydown=e=>{if(e.key=="Enter"&&!e.repeat){e.preventDefault();hold(true)}};
+B.onkeyup=e=>{if(e.key=="Enter")hold(false)};
+B.oncontextmenu=e=>e.preventDefault();
+// holding the picture bears down too: the window in the cat's haunch
+const win=$("win");
+win.onpointerdown=e=>{e.preventDefault();win.setPointerCapture&&win.setPointerCapture(e.pointerId);hold(true)};
+win.onpointerup=win.onpointercancel=()=>hold(false);
+win.oncontextmenu=e=>e.preventDefault();
+
+// looking back into what was kept: g is a moment on the 48 kHz grid
+const at=g=>(g%HN+HN)%HN,
+  edge=g=>{const i=at(g);return x02+hx[i]-tau*hv[i]},
+  // the last few cycles, if it sings: over the last 60 ms, the upward crossings of the
+  // outlet's opening about its straight-line drift (while the pressure still rises the
+  // gap widens under the cycles), and the pitch from them. It sings when the swing is
+  // over 10 micrometres, the crossings come evenly, the last is within a cycle and a
+  // half of now, and the outlet opened in that last cycle.
+  // The line is fitted twice: through every sample of the window, to find the cycles,
+  // then through each whole cycle's own mean, so that neither the part-cycles at the
+  // window's ends (the picture lurched nine times a second) nor the cycle's lopsided
+  // shape (the pitch read 0.7% sharp) can tilt it.
+  sing=g=>{const W=GRID*.06,lo=max(g-W,floor(n/G8)-HN+1);
+    let ups=[],mx=-1,mn=1;
+    const fit=pts=>{let sx=0,sy=0,sxx=0,sxy=0;const N=pts.length,x0=pts[0][0];
+        for(const[x,y]of pts){const d=x-x0;sx+=d;sy+=y;sxx+=d*d;sxy+=d*y}
+        const b=(N*sxy-sx*sy)/(N*sxx-sx*sx)||0,a=(sy-b*sx)/N;return i=>a+b*(i-x0)},
+      cross=level=>{ups=[];mx=-1;mn=1;
+        for(let i=lo+1;i<=g;i++){const p=edge(i-1)-level(i-1),q=edge(i)-level(i);mx=max(mx,q);mn=min(mn,q);if(p<0&&q>=0)ups.push(i-1+p/(p-q))}},
+      all=[];
+    for(let i=lo;i<=g;i++)all.push([i,edge(i)]);
+    cross(fit(all));
+    if(ups.length>2){const means=[];
+      for(let k=0;k+1<ups.length;k++){let s=0,c=0;for(let i=Math.ceil(ups[k]);i<=floor(ups[k+1]);i++){s+=edge(i);c++}means.push([(ups[k]+ups[k+1])/2,s/c])}
+      cross(fit(means))}
+    const u=ups.length,per=u>1?(ups[u-1]-ups[0])/(u-1):0;
+    let even=u>2,opened=false;
+    for(let k=1;even&&k<u;k++){const d=ups[k]-ups[k-1];even=d>.8*per&&d<1.25*per}
+    if(even)for(let i=floor(ups[u-2]);i<=g;i++)if(edge(i)>0){opened=true;break}
+    return{ups,hz:mx-mn>1e-5&&even&&g-ups[u-1]<1.5*per&&opened?GRID/per:0}};
+
+// One figure on the print, at the cat's bottom, drawn for the moment being heard in the
+// print's own colours (taken from the scan), so that it belongs to the print and not to
+// the page's theme. Above, the valve as the cat's rump: its walls the two faces of a
+// crease that runs down into the canal, the outlet a puckered ring at the bottom, under
+// the print's own tail. Down, the canal's
+// 3 mm at one scale; across, the canal's gap e is drawn stretched, at .05 e/(e + 0.05
+// mm) of the half-width, so that its inlet's 2.5 mm stays a crease, and the outlet's
+// opening, and what leaves it, at .14 e/(e + 0.1 mm), so that the hundredths of a
+// millimetre it opens show. The rump sways as the walls move and flushes as it bears
+// down. It turns about its outlet (the keys, below); its hatching keeps the print's
+// own, upright on the page as the print's is at the cat's rear.
+// Below, hanging from the outlet, its gap traced back over the last 50 ms (a kymogram):
+// the gas let out, falling. When it sings, a stroboscope lights the figure once a
+// cycle, a little later each time, so it seems to move once a second; the trace hangs
+// from the moment it shows.
+const S=$("sec"),K=$("k"),gs=S.getContext("2d"),gk=K.getContext("2d"),
+  INK="#523f35",FUR="#b7aa7e",GAS="#6b796d",BLUSH="#854950",RED="#a95330",E0=5e-5,
+  // the grain of the print's hatching about the cat's rear: the strokes' direction in
+  // degrees (0 across, 90 upright), from the scan's brightness gradients, in cells of 40
+  // of the plate's 1,280 pixels across, centres x 20 to 460 and y 1,140 to 1,580; the
+  // first column, on the frame, takes its neighbour's. The outlet sits at (128, 1400),
+  // where the window's place in the style puts it
+  GRAIN=[93,93,103,138,142,142,135,94,94,125,97,147, 88,88,99,108,136,140,136,93,91,116,93,84,
+    86,86,91,94,97,100,124,76,62,78,88,86, 89,89,87,91,89,87,98,74,66,49,40,10,
+    89,89,87,90,90,83,87,66,30,19,6,170, 87,87,87,90,90,86,64,50,37,15,0,176,
+    96,96,89,92,92,97,42,38,34,25,6,5, 136,136,89,90,91,81,70,8,15,9,7,6,
+    133,133,121,78,69,65,42,36,27,20,18,6, 2,2,122,103,86,25,25,17,14,10,7,4,
+    10,10,27,24,55,75,88,88,89,87,84,92, 179,179,3,5,14,18,34,29,30,29,80,56],
+  ANUS=[128,1400],
+  // the grain at a point of the plate, its doubled angles averaged between the four
+  // cells about it (a direction has no sign), in radians
+  grain=(px,py)=>{const fx=min(11,max(0,(px-20)/40)),fy=min(11,max(0,(py-1140)/40)),i=min(10,floor(fx)),j=min(10,floor(fy)),a=fx-i,b=fy-j;
+    let c=0,s=0;for(const[di,dj,wt]of[[0,0,(1-a)*(1-b)],[1,0,a*(1-b)],[0,1,(1-a)*b],[1,1,a*b]]){const d=GRAIN[(j+dj)*12+i+di]*PI/90;c+=wt*Math.cos(d);s+=wt*Math.sin(d)}
+    return Math.atan2(s,c)/2},
+  calm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let shown="a valve, shut",counted="",queued=0,told=0;
+// words on a scrap ("kot" its own, "ask" the other's), shown for 4 s, then fading
+const speak=(id,text)=>{const k=$(id);k.textContent=text;k.className="";clearTimeout(k.hush);k.hush=setTimeout(()=>k.className="gone",4e3)};
+// The stage, on a wide screen: three lanes run back from the bum at the turns it can
+// aim, each with a ring a little way out, where what walks it meets the beam; the lane
+// the bum is aimed at, within 5 degrees, drawn heavier. Measured from where the bum is
+// laid out, so that it follows the page's size; nothing is drawn while it is not shown.
+const FIELD=$("field"),gf=FIELD.getContext("2d"),
+  lay=()=>{const c=$("cat"),pw=c.clientWidth,ax=c.offsetLeft+win.offsetLeft+.5*win.offsetWidth,
+      ay=c.offsetTop+win.offsetTop+.575*win.offsetHeight,top=max(0,ay-.36*pw);
+    return{pw,ax,ay,top,w:ax+.04*pw,h:max(0,c.parentNode.clientHeight-top)}};
+
+// The game, on the stage, to a song: "Chizhik-pyzhik", the Russian comic folk song, as
+// Wikipedia transcribes it after Rappaport (2012): 2/4, F major, two bars a line, "A F
+// A F | B-flat A G" and "C C C D-E | F F F", slowly, an eighth a second. Each note is
+// something arriving at a lane's ring at its time, having walked it six seconds, and
+// sounding its own pitch as it arrives, so that the song is made by what comes and
+// nothing plays between. A line comes down one lane, drawn for it and not the last
+// line's, with two eighths' rest after it to turn. Mice, cut from the funeral print,
+// washed by their note in the colour of the push that can hurt them: C, D and E teal,
+// F and G yellow, A and B-flat red, the thirds of the knob's travel (the beam takes
+// the colour of the push the knob asks for, and the aimed lane's ring shows it), so
+// that the tune is played back on s, d and f. Some on teal notes, IR-A, thinner on
+// average, want a silent beam; some on the others, IR-B, fatter, a loud one, and are
+// held in it longer. Or, one time in twenty-five, a banana. At its ring a thing waits, from a
+// third of a second before its beat to 1.2 s after, and the beam works on it while the
+// outlet is open, the bum aimed down its lane, the push its colour, and the fart so far
+// as quiet or as loud as it asks (a banana, any air): a tenth of a second of that and
+// a mouse is blown away; an IR-B, 0.3 s; a banana, a touch. What is not walks on
+// into the bum: a miss. Ten mice in a row let in and the game is over (below). Its
+// draws are its own, so neither the sound nor the kot's coin moves.
+const STEP=1,WALK=6,PRE=1/3,POST=1.2,BANDS=["#6b796d","#baac6c","#a95330"],
+  // the tune, line by line: [eighths from the line's start, semitones from A4, 440 Hz];
+  // a line takes ten eighths, its rest included
+  SONG=[[[0,0],[1,-4],[2,0],[3,-4],[4,1],[5,0],[6,-2]],[[0,-9],[1,-9],[2,-9],[3,-7],[3.5,-5],[4,-4],[5,-4],[6,-4]]],LINE=10,
+  hue=s=>s<-4?0:s<0?1:2,
+  NEED={"":.1,A:.1,B:.3,banana:.03,carrot:.03},
+  // what any air takes: a banana, a bonus; a carrot, love ("Lyubov' -- morkovka";
+  // "Togda ty puknesh'!"), which is wind: another passage drawn into the store
+  free=k=>k=="banana"||k=="carrot",
+  MICE=[[0,179],[183,101],[288,144],[436,80],[520,109],[633,93],[730,159],[893,157]],MH=200,TINT=[],
+  band=pe=>{const u=travelAt(pe/CM);return u<1/3?0:u<2/3?1:2},
+  gnow=()=>performance.now()/1e3;
+let march=null,walkers=[],blown=0,missed=0,bananas=0,carrots=0,letIn=0,streak=0,best=0,herd=362436069,sheet=null,lastT=0,
+  rad=0,rounds={},saving=0,polys=null,stars=null,frame=0;
+// Radness's screensavers, after the old desktops', behind the page: from two points,
+// Mystify, two four-cornered lines bouncing about the window, each trailing seven ghosts
+// of itself, in the glazes' accents in turn; from four, a starfield flying out from
+// behind the cat. From three the print warps, a turbulence displacing it, drifting, the
+// more for each point. None of it runs for those who ask for less motion.
+const SV=$("saver"),gv=SV.getContext("2d"),
+  saver=()=>{saving=0;if(calm||rad<2)return;const W=innerWidth,H=innerHeight,t=gnow(),cs=getComputedStyle(document.documentElement);
+    if(SV.width!=W||SV.height!=H){SV.width=W;SV.height=H}
+    gv.clearRect(0,0,W,H);
+    if(!polys)polys=[0,1].map(()=>({p:[0,1,2,3].map(()=>[Math.random()*W,Math.random()*H,(Math.random()-.5)*6,(Math.random()-.5)*6]),trail:[]}));
+    const accents=["rust","jun","ru","gold","crimson"].map(n=>cs.getPropertyValue("--"+n+"-accent").trim()),fast=rad>=5?2:1;
+    polys.forEach((q,which)=>{for(const v of q.p){v[0]+=v[2]*fast;v[1]+=v[3]*fast;if(v[0]<0||v[0]>W)v[2]*=-1;if(v[1]<0||v[1]>H)v[3]*=-1}
+      q.trail.unshift(q.p.map(v=>[v[0],v[1]]));q.trail.length=min(q.trail.length,8);
+      gv.strokeStyle=accents[(floor(t/4)+2*which)%accents.length];gv.lineWidth=1.5;
+      q.trail.forEach((s,i)=>{gv.globalAlpha=(1-i/8)*.7;gv.beginPath();s.forEach(([x,y],j)=>j?gv.lineTo(x,y):gv.moveTo(x,y));gv.closePath();gv.stroke()})});
+    gv.globalAlpha=1;
+    if(rad>=4){const c=$("cat").getBoundingClientRect(),cx=c.left+c.width/2,cy=c.top+c.height/2;
+      if(!stars)stars=Array.from({length:160},()=>[(Math.random()-.5)*2,(Math.random()-.5)*2,Math.random()]);
+      gv.fillStyle=cs.getPropertyValue("--ink").trim();
+      for(const s of stars){s[2]-=.006*fast;if(s[2]<=.02){s[0]=(Math.random()-.5)*2;s[1]=(Math.random()-.5)*2;s[2]=1}
+        const x=cx+s[0]/s[2]*W*.25,y=cy+s[1]/s[2]*H*.25,r=(1-s[2])*2.5;
+        if(x>0&&x<W&&y>0&&y<H){gv.globalAlpha=1-s[2];gv.fillRect(x-r/2,y-r/2,r,r)}}
+      gv.globalAlpha=1}
+    if(rad>=3&&frame++%3==0){$("disp").setAttribute("scale",String(8+6*(rad-3)));
+      $("turb").setAttribute("baseFrequency",(.006+.002*Math.sin(t*.7)).toFixed(4)+" "+(.01+.003*Math.cos(t*.5)).toFixed(4))}
+    saving=requestAnimationFrame(saver)};
+// Radness, for the visit: a point for a banana, and a point for a round of the song (its
+// fifteen notes) in which no mouse that counts got in. An IR-B does not count when it
+// gets in; it is hurt only once there is radness, a loud beam needing 0.3 s over the
+// points to blow it away. Each point lights the page a step more (the styles, above).
+const radden=()=>{rad++;for(let i=1;i<=5;i++)document.documentElement.classList.toggle("r"+i,rad>=i);
+    $("rad").textContent="radness "+rad;$("rad").hidden=false;if(!saving&&!calm&&rad>=2)saving=requestAnimationFrame(saver)},
+  needOf=w=>w.kind=="B"?(rad?NEED.B/rad:Infinity):NEED[w.kind],
+  counts=w=>!free(w.kind)&&w.kind!="B",
+  // a note settled, blown away or let by: when its round's last is, and no mouse that
+  // counts got in, the round earns its point
+  reckon=w=>{const r=rounds[w.round]=rounds[w.round]||{left:SONG[0].length+SONG[1].length,missed:0};
+    r.left--;if(w.fate=="walks"&&counts(w))r.missed++;if(!r.left&&!r.missed)radden()};
+const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return herd/4294967296},
+  // the herd for the notes to come, up to the one arriving a walk and a step from now;
+  // the first a walk after the press
+  // As radness grows the game hardens: the eighth shortens (to 1/(1 + 0.15 N) s); from
+  // two points a line's notes alternate over two lanes, from four over three; from three
+  // there are five lanes, ten degrees apart; and from one, some plain mice (0.15 N of
+  // them, at most 0.6) change their colour halfway down their walk.
+  lanesNow=()=>rad>=3?[40,50,60,70,80]:[40,60,80],
+  stepNow=()=>1/(1+.15*rad),
+  // the lanes for a line: as many as radness asks, none the last line's first
+  pickLanes=()=>{const all=lanesNow().filter(d=>d!=march.lanes[0]),k=rad>=4?3:rad>=2?2:1,got=[];
+    while(got.length<k&&all.length)got.push(all.splice(floor(roll()*all.length),1)[0]);return got},
+  muster=t=>{for(;;){const line=SONG[march.line%2],[at,semi]=line[march.i],arrive=march.start+at*march.step;
+    if(arrive>=t+WALK+1)return;
+    if(march.i==0)march.lanes=pickLanes();
+    const band=hue(semi),r=roll(),f=roll(),kind=f<.03?"banana":f<.055?"carrot":r<.12?(band?"B":"A"):"",
+      turn=kind==""&&roll()<min(.6,.15*rad)?{at:arrive-WALK/2,band:(band+1+floor(roll()*2))%3}:null;
+    walkers.push({deg:march.lanes[march.i%march.lanes.length],arrive,kind,band,turn,hz:440*2**(semi/12),got:0,lit:false,
+      round:march.line>>1,sprite:floor(roll()*MICE.length),wide:(kind=="A"?.8:kind=="B"?1.25:1)*(.94+.12*roll()),fate:null});
+    if(++march.i==line.length){march.i=0;march.line++;march.start+=LINE*march.step;march.step=stepNow()}}},
+  // what waits at its ring is worked on by the beam as it is now, for the frame's time;
+  // the beam reaches only the first in each lane, and those behind it wait their turn
+  meet=(t,g,dt)=>{const open=edge(g)>0,b=band(target),loud=rasp>=HEARD,fronts=new Set();
+    for(const w of walkers)if(w.turn&&t>=w.turn.at){w.band=w.turn.band;w.turn=null}
+    for(const w of walkers)if(w.fate==null&&t>=w.arrive-PRE){
+      // a beam of the wrong colour a mouse likes, and lets it walk in
+      const front=!fronts.has(w.deg),on=front&&open&&abs(tilt-w.deg)<5;fronts.add(w.deg);
+      if(on&&!free(w.kind)&&b!=w.band){w.fate="walks";w.at=t;w.said={text:words("liked"),at:t};reckon(w);continue}
+      w.lit=on&&(free(w.kind)||(w.kind!="A"||!loud)&&(w.kind!="B"||loud));
+      if(w.lit)w.got+=dt;
+      if(w.got>=needOf(w)){w.fate="blown";w.at=t;
+        if(w.kind=="banana"){bananas++;radden()}else if(w.kind=="carrot")loved();
+        else{blown++;letIn=0;best=max(best,++streak);if(coin(.35))w.said={text:words("died"),at:t}}reckon(w)}
+      else if(t>w.arrive+POST){w.fate="walks";w.at=t;reckon(w)}}},
+  // the song as things make it: each its note as it reaches its ring, plucked (a
+  // triangle wave dying away over a third of a second), scheduled a little ahead
+  ticks=t=>{if(!ac||!ac.createOscillator)return;
+    for(const w of walkers)if(!w.ticked&&w.arrive<t+.15){w.ticked=true;const when=ac.currentTime+w.arrive-t;
+      if(when>=ac.currentTime){const o=ac.createOscillator(),v=ac.createGain();
+        o.type="triangle";o.frequency.value=w.hz;v.gain.setValueAtTime(0,when);v.gain.linearRampToValueAtTime(.18,when+.005);
+        v.gain.exponentialRampToValueAtTime(.001,when+.35);o.connect(v);v.connect(ac.destination);o.start(when);o.stop(when+.36)}}},
+  play=g=>{const t=gnow(),dt=min(.1,max(0,t-lastT));lastT=t;
+    if(march)muster(t);
+    ticks(t);
+    meet(t,g,dt);
+    walkers=walkers.filter(w=>{const stay=w.said?1.8:0;
+      if(w.fate=="walks"&&t-w.at>max(STEP,stay)){if(counts(w)){missed++;letIn++;streak=0}return false}
+      return!(w.fate=="blown"&&t-w.at>max(.8,stay))});
+    if(march&&letIn>=3)over()},
+  // a game: from a press on the stage, until the kot lets ten mice in in a row; then the
+  // procession stops and its score is shown, until a press begins the next
+  startMarch=()=>{loadSheet();if(march)return;
+    blown=missed=bananas=carrots=letIn=streak=best=0;walkers=[];rounds={};$("score").hidden=true;
+    // radness belongs to a game, and goes with it
+    rad=0;for(let i=1;i<=5;i++)document.documentElement.classList.toggle("r"+i,false);$("rad").hidden=true;
+    $("disp").setAttribute("scale","0");
+    march={t0:gnow(),line:0,i:0,start:gnow()+WALK,step:stepNow(),lanes:[]}},
+  // a carrot taken: love, which is wind, drawn into the store as another passage; and
+  // what is said of it, from outside, in Russian
+  loved=()=>{carrots++;if(store<BAG)draw();
+    speak("ask","\u041b\u044e\u0431\u043e\u0432\u044c \u2014 \u043c\u043e\u0440\u043a\u043e\u0432\u043a\u0430");
+    setTimeout(()=>speak("ask","\u0422\u043e\u0433\u0434\u0430 \u0442\u044b \u043f\u0443\u043a\u043d\u0435\u0448\u044c!"),1600)},
+  over=()=>{march=null;walkers=[];const s=$("score");
+    s.innerHTML="It is over.<br>"+blown+"&nbsp;blown away"+(bananas?", "+bananas+"&nbsp;banana"+(bananas>1?"s":""):"")+
+      (carrots?", "+carrots+"&nbsp;carrot"+(carrots>1?"s":""):"")+".<br>The longest run, "+best+".<br>Let another out to begin again.";s.hidden=false},
+  // the sheet of mice, washed once in each of the three colours
+  loadSheet=()=>{if(sheet)return;sheet=new Image();
+    sheet.onload=()=>{for(const c of BANDS){const o=document.createElement("canvas"),x=o.getContext("2d");
+      o.width=sheet.width;o.height=sheet.height;x.drawImage(sheet,0,0);
+      x.globalCompositeOperation="source-atop";x.globalAlpha=.5;x.fillStyle=c;x.fillRect(0,0,o.width,o.height);TINT.push(o)}};
+    sheet.src="mice.webp"},
+  stageLook=g=>{if(!FIELD.offsetParent)return;play(g);
+    const L=lay(),dpr=devicePixelRatio||1,ox=L.ax,oy=L.ay-L.top,pw=L.pw,t=gnow();
+    Object.assign(FIELD.style,{top:L.top+"px",width:L.w+"px",height:L.h+"px"});
+    FIELD.width=round(L.w*dpr);FIELD.height=round(L.h*dpr);
+    gf.setTransform(dpr,0,0,dpr,0,0);gf.clearRect(0,0,L.w,L.h);gf.lineCap="round";
+    // each lane: its direction, and how far it runs, stopping short of the field's
+    // left and lower edges by about a mouse, so that none is cut off
+    const dir=d=>{const a=d*PI/180,dx=-Math.sin(a),dy=Math.cos(a);return[dx,dy,min((L.h-oy-.03*pw)/dy,(ox-.1*pw)/-dx)]},
+      lanes=lanesNow(),
+      // the rings stand as far out as the shortest lane allows, so that on a narrow
+      // screen there is still a way to walk to them
+      ring=min(.42*pw,.55*min(...lanes.map(d=>dir(d)[2])));
+    // the lanes are on the page, not the print, so they take the page's ink
+    const ink=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim()||INK;
+    lanes.forEach(d=>{const[dx,dy,far]=dir(d),on=abs(tilt-d)<5;
+      gf.setLineDash([.03*pw,.025*pw]);gf.strokeStyle=ink;gf.lineWidth=(on?.009:.005)*pw;
+      gf.beginPath();gf.moveTo(ox+dx*(ring+.05*pw),oy+dy*(ring+.05*pw));gf.lineTo(ox+dx*far,oy+dy*far);gf.stroke();
+      gf.setLineDash([]);gf.strokeStyle=on?BANDS[band(target)]:RED;gf.lineWidth=(on?.011:.007)*pw;
+      gf.beginPath();gf.arc(ox+dx*ring,oy+dy*ring,.04*pw,0,2*PI);gf.stroke()});
+    // the beam: the air going out along the aim, in the colour of the push asked for
+    if(edge(g)>0){const a=tilt*PI/180,dx=-Math.sin(a),dy=Math.cos(a),r=ring+.08*pw;
+      gf.globalAlpha=.55;gf.strokeStyle=BANDS[band(target)];gf.lineWidth=.035*pw;
+      gf.beginPath();gf.moveTo(ox+dx*.06*pw,oy+dy*.06*pw);gf.lineTo(ox+dx*r,oy+dy*r);gf.stroke();gf.globalAlpha=1}
+    // what walks: along its lane to the ring, a hop a beat; waiting there, shaking
+    // while the beam works on it, the ring filling in its colour, and the next on its
+    // lane stopping a step behind; past it, into the bum; blown away, back up the lane,
+    // turning over, fading
+    const hop=march?abs(Math.sin(PI*(t-march.t0)/STEP)):0,h=.2*pw,waiting={};
+    gf.font=`italic ${max(10,.035*pw)}px "House Book", serif`;
+    for(const w of walkers){const[dx,dy,far]=dir(w.deg);let dist,alpha=1,lift=0,spin=0;
+      if(w.fate=="blown"){const s=t-w.at;dist=ring+s*1.2*pw;lift=s*.6*pw;spin=s*9;alpha=max(0,1-s/.8)}
+      else if(w.fate=="walks"){const s=min(1,(t-w.at)/STEP);dist=ring*(1-s);alpha=max(0,1-s)}
+      else{dist=max(far-(far-ring)*min(1,max(0,1-(w.arrive-t)/WALK)),ring+(waiting[w.deg]||0)*.22*pw);waiting[w.deg]=(waiting[w.deg]||0)+1}
+      if(w.fate==null&&w.got>0){gf.strokeStyle=w.kind=="banana"?"#d8c25a":w.kind=="carrot"?RED:BANDS[w.band];gf.lineWidth=.012*pw;
+        gf.beginPath();gf.arc(ox+dx*ring,oy+dy*ring,.04*pw,-PI/2,-PI/2+2*PI*min(1,w.got/needOf(w)));gf.stroke()}
+      const x=ox+dx*dist+(w.lit?Math.sin(t*80)*.004*pw:0),y=oy+dy*dist-lift-(w.fate==null&&t<w.arrive?hop*.012*pw:0);
+      gf.save();gf.globalAlpha=alpha;gf.translate(x,y);gf.rotate(spin);
+      if(w.kind=="banana"){gf.beginPath();gf.arc(0,-.1*pw,.09*pw,.2*PI,.8*PI);gf.arc(0,-.13*pw,.09*pw,.75*PI,.25*PI,true);gf.closePath();
+        gf.fillStyle="#d8c25a";gf.fill();gf.strokeStyle=INK;gf.lineWidth=.005*pw;gf.stroke()}
+      else if(w.kind=="carrot"){gf.strokeStyle=GAS;gf.lineWidth=.012*pw;gf.beginPath();
+        for(const lx of[-.03,0,.03]){gf.moveTo(0,-.15*pw);gf.lineTo(lx*pw,-.21*pw-abs(lx)*-.4*pw)}gf.stroke();
+        gf.beginPath();gf.moveTo(-.035*pw,-.15*pw);gf.lineTo(.035*pw,-.15*pw);gf.lineTo(0,-.005*pw);gf.closePath();
+        gf.fillStyle=RED;gf.fill();gf.strokeStyle=INK;gf.lineWidth=.005*pw;gf.stroke();gf.beginPath();
+        for(const y of[-.12,-.09,-.06]){const hw=.035*pw*(-y/.15);gf.moveTo(-.7*hw,y*pw);gf.lineTo(.1*hw,y*pw)}gf.stroke()}
+      else{const[sx,sw]=MICE[w.sprite],mw=sw*h/MH*w.wide,img=TINT[w.band]||sheet;
+        if(img&&img.width)gf.drawImage(img,sx,0,sw,MH,-mw/2,-h,mw,h);
+        if(w.kind){const tag="IR-"+w.kind,tw=gf.measureText(tag).width,fs=max(10,.035*pw);
+          gf.fillStyle="#c5b896";gf.fillRect(mw/2-.01*pw,-h-fs*.2,tw+.02*pw,fs*1.3);gf.fillStyle=INK;gf.fillText(tag,mw/2,-h+fs*.85)}}
+      gf.restore();
+      // what it says, on a scrap above where it was, upright, fading
+      if(w.said&&t-w.said.at<1.8){const fs=max(10,.035*pw),tw=gf.measureText(w.said.text).width,ty=oy+dy*dist-h-fs*1.8;
+        gf.globalAlpha=min(1,(1.8-(t-w.said.at))/.4);gf.fillStyle="#c5b896";gf.fillRect(x-tw/2-.01*pw,ty-fs,tw+.02*pw,fs*1.35);
+        gf.fillStyle=INK;gf.fillText(w.said.text,x-tw/2,ty);gf.globalAlpha=1}}};
+const ask=()=>{if(!queued){queued=1;requestAnimationFrame(()=>{queued=0;look()})}};
+const look=()=>{
+  const dpr=devicePixelRatio||1,full=85*CM;
+  const top=floor(n/G8),now=asleep?top:min(floor((from+max(0,clock())*RATE)/G8),top),
+    song=sing(now),sings=song.hz>0;
+  // the words
+  const said=sings?"a tone, "+round(song.hz)+"&nbsp;Hz":edge(now)>0?"a whisper":"shut";
+  if("a valve, "+said!=shown){shown="a valve, "+said;$("what").innerHTML=shown;
+    $("s").textContent="";setTimeout(()=>$("s").textContent=said.replace("&nbsp;"," "),100)}
+  sniff();
+  // the count, from the first fart on
+  const count=ninja+"&nbsp;ninja&rsquo;d, "+heard+"&nbsp;heard, "+clenched+"&nbsp;clenched";
+  if(ninja+heard+clenched&&count!=counted){counted=count;$("tally").innerHTML=count;$("tally").hidden=false}
+  // the windbag, as full as the store, to a litre
+  const bag=(.6*min(1,store/BAG)).toFixed(3);if($("bag").style.opacity!=bag)$("bag").style.opacity=bag;
+  // and what is said of the last, for 4 s and then fading: by the kot, from its
+  // mouth; by the other, from outside it
+  if(quips!=told){told=quips;speak(by,quip)}
+  // the moment shown: now, or the stroboscope's moment in the last whole cycle (held at
+  // the widest opening for those who ask for less motion)
+  let g=now;
+  if(sings&&song.ups.length>1){const u=song.ups,c1=u[u.length-2],c2=u[u.length-1];
+    let f=(clock()%1+1)%1;
+    if(calm){let best=0,bi=c1;for(let i=floor(c1);i<c2;i++)if(edge(i)>best){best=edge(i);bi=i}f=(bi-c1)/(c2-c1)}
+    g=c1+f*(c2-c1)}
+  const i0=at(floor(g)),i1=at(floor(g)+1),fr=g-floor(g),x=hx[i0]+(hx[i1]-hx[i0])*fr,v=hv[i0]+(hv[i1]-hv[i0])*fr,
+    pressure=hp[i0];
+  S.width=K.width=round(S.clientWidth*dpr);S.height=round(S.clientHeight*dpr);K.height=round(K.clientHeight*dpr);
+  const sw=S.width,sh=S.height,cx=sw/2,lw=max(1,sw/140),
+    // the crease is drawn at one stretch and the opening, and what leaves it, at a wider
+    wide=e=>.05*cx*e/(abs(e)+E0),out=e=>.14*cx*e/(abs(e)+2*E0),
+    yA=.35*sh,yI=.6*sh,yO=.92*sh,Y=z=>yI+z/t*(yO-yI),
+    e1=x01+x+tau*v,e2=x02+x-tau*v,zc=e1>0!=e2>0?t*e1/(e1-e2):-1,
+    w1=wide(max(0,e1)),w2=wide(max(0,e2)),wo=out(max(0,e2)),
+    // a face on side s: from the foot of the crease down the canal to the outlet
+    face=s=>{gs.moveTo(cx,yA);gs.lineTo(cx+s*w1,yI);if(zc>=0)gs.lineTo(cx,Y(zc));gs.lineTo(cx+s*w2,yO)};
+  gs.clearRect(0,0,sw,sh);gs.lineJoin=gs.lineCap="round";
+  // the rump: one round of fur, two-lobed, its outline only outside; the lobe on the
+  // side the bum is turned against pressed in and flatter; flushing as it bears down
+  // (the lobes stand .3 of the half-width either side, so that the outlet sits in the
+  // notch between their bottoms)
+  const ang=tilt*PI/180,ca=Math.cos(ang),sa=Math.sin(ang),sway=.3*wide(x),ry=.45*sh,ly=yO-ry*Math.sqrt(1-.55*.55),
+    rump=()=>{gs.beginPath();for(const s of[1,-1]){const q=s==pside?press:0,lx=cx+s*((.3-.08*q)*cx+sway),rx=.55*(1-.12*q)*cx;
+      gs.moveTo(lx+rx,ly);gs.ellipse(lx,ly,rx,ry,0,0,2*PI)}};
+  rump();gs.strokeStyle=INK;gs.lineWidth=2*lw;gs.stroke();rump();gs.fillStyle=FUR;gs.fill();
+  gs.globalAlpha=.12*min(1,pressure/full);gs.fillStyle=BLUSH;gs.fill();gs.globalAlpha=1;
+  // hatched with the print's own grain, each stroke turned as the print's strokes run
+  // where it lies on the plate, however the bum is turned; in rows across the grain at
+  // the rump's middle, a little uneven. Drawn in a frame upright on the page, from the
+  // outlet; k turns its pixels into the plate's
+  gs.save();rump();gs.clip();gs.translate(cx,yO);gs.rotate(-ang);
+  const R=.85*cx,ox=-(ly-yO)*sa,oy=(ly-yO)*ca,k=.26*1280/sw,row=10*lw,step=4.2*lw,
+    tc=grain(ANUS[0]+ox*k,ANUS[1]+oy*k),dx=Math.cos(tc),dy=Math.sin(tc),ni=Math.ceil(1.4*R/row),nj=Math.ceil(1.4*R/step);
+  gs.beginPath();
+  for(let i=-ni;i<=ni;i++)for(let j=-nj;j<=nj;j++){
+    const a=i*row,b=(j+(i&1)/2)*step,u=ox+a*dx-b*dy,y=oy+a*dy+b*dx,th=grain(ANUS[0]+u*k,ANUS[1]+y*k),
+      h=((i*7919+j*104729)%1000+1000)%1000/1000,len=.36*row*(.85+.3*h),c=len*Math.cos(th),d=len*Math.sin(th);
+    gs.moveTo(u-c,y-d);gs.lineTo(u+c,y+d)}
+  gs.strokeStyle=INK;gs.lineWidth=1.5*lw;gs.stroke();gs.restore();
+  // the crease and the canal under it: flushed inside by the push, edged in ink
+  gs.beginPath();gs.moveTo(cx,yA);gs.lineTo(cx+w1,yI);if(zc>=0)gs.lineTo(cx,Y(zc));gs.lineTo(cx+w2,yO);
+  gs.lineTo(cx-w2,yO);if(zc>=0)gs.lineTo(cx,Y(zc));gs.lineTo(cx-w1,yI);gs.closePath();
+  gs.globalAlpha=min(1,pressure/full);gs.fillStyle=BLUSH;gs.fill();gs.globalAlpha=1;
+  gs.beginPath();face(1);face(-1);gs.strokeStyle=INK;gs.lineWidth=lw;gs.stroke();
+  // the pucker: creases about the outlet, and the outlet itself, dark, opening as the
+  // walls part; the gas going out of it
+  gs.beginPath();
+  for(let a=0;a<2*PI;a+=PI/4){const c=Math.cos(a+.3),d=Math.sin(a+.3);gs.moveTo(cx+(wo+.05*cx)*c,yO+.04*cx*d);gs.lineTo(cx+(wo+.1*cx)*c,yO+.08*cx*d)}
+  gs.lineWidth=.9*lw;gs.stroke();
+  gs.beginPath();gs.ellipse(cx,yO,.03*cx+wo,.022*cx+.5*wo,0,0,2*PI);gs.fillStyle=INK;gs.fill();
+  gs.globalAlpha=.85;gs.fillStyle=GAS;gs.fillRect(cx-wo,yO,2*wo,sh-yO);gs.globalAlpha=1;
+  // the trace: row y is the outlet y rows' share of 50 ms before the moment shown, its
+  // gap the gas let out, edged in ink
+  const per=GRID*.05/K.height,rows=[];
+  gk.clearRect(0,0,K.width,K.height);gk.fillStyle=GAS;gk.globalAlpha=.85;
+  for(let y=0;y<K.height;y++){const e=edge(floor(g-y*per)),q=e>0?out(e):0;
+    if(q)gk.fillRect(cx-q,y,2*q,1);rows.push(q)}
+  gk.globalAlpha=1;gk.strokeStyle=INK;gk.lineWidth=.8*lw;gk.lineJoin="round";
+  for(const s of[1,-1]){gk.beginPath();
+    rows.forEach((q,y)=>q?(rows[y-1]?gk.lineTo(cx+s*q,y):gk.moveTo(cx+s*q,y)):0);gk.stroke()}
+  stageLook(now);
+  // the herd's count, from the first press on the stage
+  if(march||blown+missed+bananas){const s=blown+"&nbsp;blown away, "+missed+"&nbsp;missed"+(bananas?", "+bananas+"&nbsp;banana"+(bananas>1?"s":""):"")+
+    (carrots?", "+carrots+"&nbsp;carrot"+(carrots>1?"s":""):"");
+    if($("herd").innerHTML!=s){$("herd").innerHTML=s;$("herd").hidden=false}}
+  S.setAttribute("aria-label","The cat's bum, "+(sings?"opening and shutting, seen slowed.":edge(now)>0?"open.":"shut."));
+  K.setAttribute("aria-label","What leaves it: "+(sings?"puffs, "+round(song.hz)+" a second.":edge(now)>0?"a steady stream.":"nothing."));
+  if(!asleep||march||walkers.length)ask()};
+
+// The pressure knob, from a centimetre short of opening to the trusted line, in cm of
+// water. Its first twenty-fifth of travel is that centimetre of shut; above opening the
+// push grows as the square of the travel. Just over opening, where a passage is let out
+// over seconds, the knob is fine; at the top, coarse.
+const SLIVER=.04;
+let least=0,most=0;
+const pressAt=u=>{const o=P_OPEN/CM;if(u<SLIVER)return least+(o-least)*u/SLIVER;
+    const f=(u-SLIVER)/(1-SLIVER);return o+(most-o)*f*f},
+  travelAt=p=>{const o=P_OPEN/CM;return p<=o?SLIVER*max(0,p-least)/(o-least):SLIVER+(1-SLIVER)*sqrt(min(1,(p-o)/(most-o)))},
+  knob=p=>{target=p*CM;$("v").innerHTML=p.toFixed(2)+" cm&nbsp;H<sub>2</sub>O";
+    $("p").setAttribute("aria-valuetext",p.toFixed(2)+" centimetres of water")},
+  reach=()=>{least=floor(BOTTOM/CM*10+1e-6)/10;most=floor(TOP/CM*10)/10};
+$("p").oninput=e=>knob(pressAt(+e.target.value));
+// tension: the pressure's range follows it, from just short of opening to the trusted
+// line, and the push stays where it was if the new range holds it; a valve at rest is
+// settled again under the new stiffness, its gas kept
+$("q").oninput=e=>{const s=+e.target.value,p=$("p"),was=target/CM;tense(s);reach();
+  const now=min(most,max(least,was));p.value=String(travelAt(now));knob(now);
+  $("w").innerHTML=s.toFixed(2)+"&times;";
+  e.target.setAttribute("aria-valuetext",s.toFixed(2)+" times its resting stiffness; it opens at "+(P_OPEN/CM).toFixed(1)+" centimetres of water");
+  if(asleep)settle();ask()};
+addEventListener("resize",ask);
+
+// The keys. Space bears down, anywhere on the page, at the knob's push; s, d and f set
+// the knob to the middle of its teal, yellow or red third and bear down with it, held
+// as long as the key is; another pressed meanwhile changes the push without letting go,
+// so that a held fart can be played through colours, and it ends when the last key is
+// let go, the push going back to the key still held. Left and right (h and l) turn the
+// bum about its outlet, counter-clockwise and clockwise, 5 degrees a press, from 40
+// (toward the print's corner, where it starts) to 80 (nearly straight back): the turns
+// at which it stays inside the cat. Turned on past either end it turns no further, and
+// the cheek on that side presses on the other, flattening, for up to 15 degrees more
+// (drawn only: the valve does not yet feel it). Up and down (k and j) move the push a
+// fiftieth of the knob's travel, and with Shift the tension a twentieth of its range.
+// An arrow on a focused knob is the knob's own. On a narrow screen, pads under the
+// stage stand for h and l, s, d and f, each held as long as it is touched.
+let aim=40,tilt=40,press=0,pside=1,downs=[];
+const point=()=>{tilt=min(80,max(40,aim));press=abs(aim-tilt)/15;pside=aim<40?1:-1;
+    win.style.transform="rotate("+tilt+"deg)";ask()},
+  nudge=(id,by)=>{const k=$(id),lo=+k.min,hi=+k.max;k.value=String(min(hi,max(lo,+k.value+by*(hi-lo))));k.oninput({target:k})},
+  // the middle of each third of the knob's travel that lets air out
+  THIRDS={s:(SLIVER+1/3)/2,d:.5,f:5/6},
+  colour=k=>{if(Object.hasOwn(THIRDS,k)){$("p").value=String(THIRDS[k]);$("p").oninput({target:$("p")})}},
+  // the key's cap in the guide, pressed while the key is
+  cap=(k,on)=>{const c=$("cap-"+(k==" "?"space":/^(arrowleft|h)$/i.test(k)?"h":/^(arrowright|l)$/i.test(k)?"l":
+      /^(arrowup|k)$/i.test(k)?"k":/^(arrowdown|j)$/i.test(k)?"j":k));
+    if(c)c.classList.toggle("on",on)},
+  letGo=()=>{for(const k of[" ","s","d","f","h","l","k","j"])cap(k,false);if(downs.length){downs=[];hold(false)}},
+  // a key (or a pad) down: whether it was one of the page's
+  keyDown=(k,shift)=>{cap(k,true);
+    if(k==" "||Object.hasOwn(THIRDS,k)){if(!downs.includes(k)){downs.push(k);colour(k);if(downs.length==1)hold(true)}}
+    else if(/^(arrowleft|h)$/i.test(k)){aim=max(25,aim-5);point()}
+    else if(/^(arrowright|l)$/i.test(k)){aim=min(95,aim+5);point()}
+    else if(/^(arrowup|k)$/i.test(k))nudge(shift?"q":"p",shift?.05:.02);
+    else if(/^(arrowdown|j)$/i.test(k))nudge(shift?"q":"p",shift?-.05:-.02);
+    else return false;
+    return true},
+  keyUp=k=>{cap(k,false);const i=downs.indexOf(k);if(i<0)return;downs.splice(i,1);if(!downs.length)hold(false);else colour(downs[downs.length-1])},
+  named=e=>e.key.length==1?e.key.toLowerCase():e.key;
+point();
+addEventListener("keydown",e=>{const k=named(e),tag=e.target.tagName||"";
+  if(e.ctrlKey||e.metaKey||e.altKey||tag=="INPUT"&&/^Arrow/.test(k)||tag=="BUTTON"&&e.target!=B&&k==" ")return;
+  if(keyDown(k,e.shiftKey))e.preventDefault()});
+addEventListener("keyup",e=>keyUp(named(e)));
+addEventListener("blur",letGo);
+for(const b of $("pads").children){const k=b.dataset.k;
+  b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture&&b.setPointerCapture(e.pointerId);keyDown(k)};
+  b.onpointerup=b.onpointercancel=()=>keyUp(k);b.oncontextmenu=e=>e.preventDefault()}
+$("pads").hidden=false;
+reach();$("p").value=String(travelAt(target/CM));knob(target/CM);
+$("knob").hidden=false;win.hidden=false;
+
+// theme: the system's, until the visitor turns it; nothing is kept
+const sys=matchMedia("(prefers-color-scheme: dark)"),T=$("theme"),root=document.documentElement,
+  dark=()=>root.dataset.theme?root.dataset.theme=="dark":sys.matches,
+  turn=()=>{T.textContent=dark()?"light":"dark";ask()};
+sys.addEventListener("change",()=>{if(!root.dataset.theme)turn()});
+T.onclick=()=>{root.dataset.theme=dark()?"light":"dark";turn()};
+turn();T.hidden=false;
+// schemes: the plain paper, then the rust, celadon, jun and gold glazes' washes, and
+// round again; the dot wears the scheme to come; nothing is kept
+const SCHEMES=["paper","rust","celadon","jun","gold"],GZ=$("glaze");let scheme=0;
+const tint=()=>{const nx=SCHEMES[(scheme+1)%SCHEMES.length];GZ.dataset.next=nx;GZ.setAttribute("aria-label","colours: "+nx)};
+GZ.onclick=()=>{scheme=(scheme+1)%SCHEMES.length;root.dataset.scheme=SCHEMES[scheme];tint();ask()};
+tint();GZ.hidden=false;
+
+// the page's own size: it asks for itself and counts what comes back
+fetch(location.pathname).then(r=>r.arrayBuffer()).then(b=>$("self").textContent=b.byteLength.toLocaleString("en-US"));
+console.log("bdeo: I break wind.");
+</script>
+</body>
+</html>

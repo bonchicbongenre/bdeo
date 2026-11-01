@@ -1,0 +1,209 @@
+What bumsf.art does. A golf pass must keep every line true.
+
+ 1. One soft valve, shut at rest, drawn as the rump of a printed cat (item 16), at
+    its rear, under the print's own tail, in the print's own colours as sampled from
+    the scan (whatever the page's theme). Two lobes of fur; between them a crease
+    whose faces are the valve's walls, running down the canal to the outlet, a
+    puckered ring that opens as the walls part. Down, the canal's 3 mm at one scale;
+    across, its gap is drawn stretched (.05 e/(e + 0.05 mm) of the half-width), and
+    the outlet's opening at a wider stretch (.14 e/(e + 0.1 mm)), so that hundredths
+    of a millimetre show. The rump sways as the walls move and flushes as it bears
+    down; the canal flushes with the push. Its hatching follows the print's: each
+    stroke turned as the print's strokes run where it lies, from the scan's
+    gradients in cells of 40 of its 1,280 pixels. Below the outlet, falling from it,
+    its gap traced back over the last 50 ms (a kymogram): the gas let out, edged in
+    ink.
+ 2. The pressure knob sets how hard to push, from a centimetre of water short of
+    where the valve opens to a top that follows the tension (item 9): 50.5 to 80.7
+    at rest, read in hundredths. Its first twenty-fifth of travel is that centimetre
+    of shut; above opening the push grows as the square of the travel, so the first
+    2 cm of water over opening, where a passage is let out over seconds, take a
+    quarter of the knob. It starts at 54. Moving the tension keeps the push where it
+    was if the new range holds it. "hold" (pointer, touch, Enter), Space anywhere on
+    the page, or holding the rump, bears down: the push rises toward the knob's level
+    over about a quarter of a second and, let go, falls over about a sixth (both
+    estimates). s, d and f set the push to the middle of the knob's teal, yellow or
+    red third (item 17) and bear down while held; another pressed meanwhile changes
+    the push without letting go, and the fart ends with the last key let go, the
+    push going back to the key still held. Either knob may move while held: up
+    and down (k and j) move the push a fiftieth of its travel, with Shift the tension
+    a twentieth of its range. Left and right (h and l) turn the rump about its outlet,
+    counter-clockwise and clockwise, 5 degrees a press, from 40 degrees (toward the
+    print's corner, where it starts) to 80 (nearly straight back), the turns at which
+    it stays inside the cat; turned on past either end, for up to 15 degrees, it
+    turns no further and the lobe on that side presses in, flatter. That pressing is
+    drawn only; the valve does not feel it. An arrow on a focused knob is the knob's.
+ 3. The wall is a mass on a spring with a wave along its face, as Titze (1988)
+    described the vocal folds and Lucero (1999) wrote them down: 4.76 kg a square
+    metre, stiffness 2 MN per cubic metre, a slit 1.4 cm long and 3 mm thick, the
+    wave 0.81 ms across half of it, the jet leaving the wall inside once the outlet
+    is 1.3 times the inlet. These are the vocal folds' values (Lucero's Table I);
+    for this valve they are estimates. It is stepped 384,000 times a second, and its
+    state kept for half a second.
+ 4. Its damping is 580 N s per cubic metre, not the vocal folds' 1000: the most at
+    which a 107 ml passage, pushed at rest to anything from 55 to 80 cm of water, is
+    at least four-fifths tone by energy. At the folds' damping the same passage was
+    out before a tone could grow, and sounded 71 to 94% hiss. That flatus rings is
+    common experience; the number is an estimate chosen for it.
+ 5. At rest the outlet's edges overlap, pressed together as hard as 51.5 cm of
+    water can part them: the opening pressure of the anal canal in continent women,
+    measured by acoustic reflectometry (Mitchell et al., 2012). The inlet stands
+    open as far as the outlet is pressed shut (an estimate). Where the edges press,
+    they press back three times as stiffly as the wall (Ishizaka and Flanagan, 1972).
+ 6. Given air without end it stays shut below its opening pressure. From 0.72 times
+    its resting stiffness up it then opens straight into a tone; below that it first
+    stands open and lets the air through, a whisper (at 0.6 times, from 30.9 to 37.1
+    cm of water), before it sings. The label says which, from the valve's last 60 ms:
+    "a valve, shut", "a valve, a whisper", "a valve, a tone, N Hz". It sings when the
+    outlet's opening swings about its drift by more than 10 micrometres, in cycles
+    that come evenly, the last of them recent and opening the outlet; the pitch is
+    counted from those cycles. A screen reader hears the change.
+ 7. The tension knob sets the wall's stiffness, 0.6 to 1.5 times its resting
+    stiffness, in hundredths; nothing else changes. The valve opens at 51.5 cm of
+    water times the tension: 30.9 at 0.6, 77.25 at 1.5. Just above opening it sings
+    near 100 Hz at 0.6 times, 133 at rest, 158 at 1.4. While bearing down the canal
+    relaxes little: 14% on average in women and none in men, each give or take
+    about 30% (high-resolution manometry, Oblizajek et al., 2019); 0.6 is about
+    where the canals of incontinent women open (31.6 cm of water, Mitchell et al.,
+    2012). Tensed while at rest, it settles again and keeps its gas.
+ 8. When it sings, the section is lit as by a stroboscope, once a cycle and a
+    little later each time, so it seems to move once a second; the trace hangs from
+    the moment the light shows, and creeps down from the outlet one cycle a second.
+    When it stops singing the light goes and the last cycles slide out of the trace.
+    With reduced motion it is held at its widest.
+ 9. The pressure knob stops at a line drawn for the vocal folds' valve held without
+    end, where its wave grew wider than the slit it runs on: 80.75 cm of water at
+    rest, 84.97 at 1.5 times, between two the lower, below rest the rest's, and the
+    knob's top is that to its tenth. This valve is never held without end: pushing
+    out one passage up to that line, at tensions from 0.6 to 1.5, its wave stays
+    under a quarter of its gap (0.237 at most over 172 pushes). Past 1.5 times less
+    than 5 cm of water lay between opening and the line, so the tension stops there.
+10. Behind the valve is one passage of gas at a time, drawn as people pass them:
+    about 107 ml and three sulphur gases, hydrogen sulphide, methanethiol and
+    dimethyl sulphide, each lognormal with the mean and spread Suarez, Springfield
+    and Levitt measured over 87 passages (1998, Table 1; the shape an estimate).
+    Hydrogen sulphide and methanethiol run against each other (a correlation of
+    -0.56), as they must for methanethiol to lead in the 22% of passages it led in
+    theirs. A passage over half a litre, 3 in 1,000, is drawn again: 87 passages at
+    their mean and spread would hardly hold one, and this valve rings louder the more
+    it is given. 100,000 drawn give 105 ml and 22%. The push presses on the gas; over
+    the passage's last fifth it tapers to nothing (an estimate), so the valve shuts
+    with some still in, and that joins the next. A new passage comes at a press only
+    once the last has gone; the page skips the hours a real one takes to gather.
+11. Each fart is counted, from the first air through until, let go, the outlet has
+    stayed shut 20 ms: heard if the rasp in its sound (the flow's rate of change)
+    came within 30 dB of 0.184, the vocal folds' valve's loudest held tone, and
+    ninja'd if only its hiss did; a clench (below) is counted when its push falls
+    away, or at the next press. The label keeps the count for the visit: "N
+    ninja'd, N heard, N clenched". With one passage this valve
+    lets it out three ways: relaxed
+    and pushed only just past opening, as a whisper of a second or two, ninja'd; at
+    rest, as a brrp of a sixth to six tenths of a second, the outlet opening and
+    shutting 5 to 55 times; clenched, 1.3 times and up, as a squeak of about half a
+    second to four fifths.
+    Pushed past gentle, a relaxed valve's rush ends in a pop as the flow is cut,
+    and is heard. What is said of the last, for 4 s, then fading, on scraps of the
+    print's paper: a ninja'd one is asked after from outside the kot, at the height
+    of its eyes, "did you fart?"; a heard one, at the tosses of a coin of its own
+    (the sound's draws do not move when it is tossed), the kot owns from its mouth a
+    quarter of the time, "bobo farted", the other exclaims at an eighth, "bobo!", and
+    no one says anything the rest; and the third of a run, each begun within 2 s of
+    the last one's end (an estimate), the kot names half the time: "stinky bobo".
+    Each has others, said in turn; the kot is Bobo, and speaks of itself by name,
+    never to itself ("that was bobo", "bobo stinks"). A press that pushes to
+    within 2 cm of water of opening, a risk taken, and lets no air through is a
+    clench: it draws another passage into the store on top of what is there, until
+    the store holds a litre (the windbag; an estimate, and a game's), and the print's
+    coiled tail washes grey as the store fills.
+12. Then the nose. What a fart lets out spreads through a room as an instantaneous
+    point source (Carslaw, 1921, p. 150), stirred as the middle of the range
+    measured in houses (0.001 to 0.013 m^2/s, Cheng et al., 2011; an estimate). Each
+    gas is smelt above its odour threshold (Nagata, Table 2: 0.00041, 0.000070 and
+    0.0030 ppm). The label says what the strongest smells of, in Suarez's words:
+    "rotten eggs", "decomposing vegetables" or "sweet". The word stands in full while
+    the middle of the cloud is a thousand times over threshold and fades to nothing
+    as it falls to once over (the logarithm of the excess: an estimate). A fart that
+    can be smelt a metre away is "vonyuchaya" (Russian, stinky), loud or not. A
+    passage at Suarez's means, pushed out at 60 at rest, lets out 91 ml and is smelt
+    to 0.79 m for 78 seconds.
+13. It is heard while held, and for as long as it still moves after: the rate of
+    change of the flow through it, which is what a small opening sends out, and
+    over it the hiss of the jet, white, in proportion to the flow (an estimate). One
+    fixed gain, one fixed level and one fixed soft limit (tanh), never louder than 1
+    dB under full scale: a passage at Suarez's mean pushed at 60 at rest peaks near
+    6 dB under, the loudest are rounded into the limit, and a whisper stays a
+    whisper beside a tone. It begins from silence. Nothing sounds
+    until held, and a bout held the same way sounds the same at any sample rate,
+    however it is cut into buffers. Come to rest, the page stops and waits; the
+    smell keeps fading.
+14. The page's colours come from the house tokens; the figure and the kot's words,
+    being on the print, take the print's. The tab's icon is a bum in the rust glaze.
+    Dark mode follows the system until the theme button turns it for the visit; the
+    dot after it turns the page through schemes, the plain paper and then the rust,
+    celadon, jun and gold glazes' washes, each with its glaze's accent, the dot
+    wearing the scheme to come; nothing is kept. Resizing redraws.
+15. The label gives the page's own size, read live. Without script the print stands
+    alone, the label says the valve is shut, and there are no knobs. The console
+    gives one word and what it means.
+16. The print is the Cat of Kazan, a hand-coloured woodcut: No. 172 in D. A.
+    Rovinskii's Russkiia narodnyia kartinki (1881), from the New York Public
+    Library's scan (public domain), cut at its frame and set 1,280 pixels wide. The
+    rump is at the cat's rear, low, under the hook of its tail. The picture's
+    description gives the caption as it reads aloud, "... slatko el, slapko bzdel",
+    and in English: "... ate sweetly, farted weakly" ("slapko" for "slabko",
+    weakly; Pletneva, 2021). On a narrow screen the print stands at the right, no
+    taller than the screen, the lanes under and beside it, and under them a line
+    saying how to play and pads that stand for the keys (turn, and teal, yellow,
+    red, each held while touched); the knobs and the label follow.
+17. On a wide screen the print stands high at the right of a stage, the knobs at the
+    top left with a guide under them, how to play (open at first, to be folded): a
+    line saying it, and the keys as caps, s, d and f in teal, yellow and red, each
+    cap pressed while its key is held, the
+    label under the print, and the procession comes, to a song: "Chizhik-pyzhik", the
+    Russian comic folk song, in Wikipedia's transcription after Rappaport (2012), 2/4,
+    F major, slowly, an eighth a second. From a press, each of its notes is something
+    walking six seconds down one of three lanes that fan back from the bum at the
+    turns it can aim (40, 60, 80 degrees), arriving at the lane's ring at its time
+    and sounding its own pitch, plucked, as it arrives; nothing else is heard of the
+    song. A line comes down one lane, not the last line's, with two eighths' rest to
+    turn. Mice cut from "Mice Bury the Cat" (Rovinskii's atlas; public domain, from
+    Wikimedia Commons), washed by their note in one of three colours, the print's
+    teal, yellow and red, for the thirds of the pressure knob's travel (C, D, E teal;
+    F, G yellow; A, B-flat red), so the tune is played back on s, d and f; some on
+    teal notes tagged IR-A, thinner on average, some on the others IR-B, fatter; no
+    explanation is given. One time in thirty-three, a banana in a note's place, and
+    one in forty, a carrot: love, after "Lyubov' -- morkovka", which the other says in
+    Russian on taking it, and then "Togda ty puknesh'!", and which draws another
+    passage into the store. While a game is on, the push rises and falls over a
+    twentieth of a second, not a quarter and a sixth: a game's speed, so that a song
+    can be kept up with. The beam is
+    the air going out along the aim, in the colour of the push the knob asks for, which
+    the aimed lane's ring shows. A thing waits at its ring from a third of a second
+    before its beat to 1.2 s after, and is blown away by a tenth of a second of a beam
+    of its colour on its lane, silent for an IR-A, loud for an IR-B, which needs 0.3
+    s; a banana or a carrot by a touch of any air. What is not walks on into the
+    bum. The label keeps the count: "N blown away, N missed", and bananas and carrots
+    taken. The beam reaches only the first thing waiting on its lane; what is behind
+    waits its turn, untouched. A mouse met by a beam of the wrong colour likes it ("ah, i like your farts,
+    kot", and others in turn) and walks in; one blown away sometimes says so ("oh no,
+    a stinky fart!", and others). A game runs from a press on the stage until three
+    mice in a row are let in (a mouse blown away begins the count again; bananas and
+    carrots do not count);
+    then the procession stops and a scrap of paper gives the score: mice blown away,
+    bananas and carrots, and the longest run blown away in a row; the next press
+    begins a new game. An IR-B let in does not count, against the run or the score.
+    Radness, for the game (a new game begins without it): a point for each banana,
+    and a point for each round of the song (its fifteen notes) in which no mouse that
+    counts gets in; the label says it. An IR-B cannot be hurt without radness, and
+    with N points needs 0.3 s over N of loud beam. With radness the game hardens: the
+    eighth shortens to 1/(1 + 0.15 N) s; from two points a line's notes alternate
+    over two lanes, from four over three; from three there are five lanes, ten
+    degrees apart; and some plain mice (0.15 N of them, at most 0.6) change colour
+    halfway down their walk. And each point lights the whole page a step more: the
+    ground drifts through the glazes' washes; the print's colours sway, and behind
+    the page Mystify's lines bounce, after the old desktops' screensaver; everything
+    turns slowly through the hues, and the print warps; the print rocks, and a
+    starfield flies out from behind the cat; and all of it faster. Asked for less
+    motion, the page tints and holds still. The other's and the kot's lines too each
+    have others, taken in turn. Its draws are its own, so neither the
+    sound nor the kot's coin moves when it walks.

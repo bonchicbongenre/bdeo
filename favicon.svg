@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<!-- a bum, from behind, in rust base: oklch(0.513 0.048 40.5), dark oklch(0.626 0.048 40.5) -->
+<style>*{fill:#7f5e52}@media(prefers-color-scheme:dark){*{fill:#a27f72}}</style>
+<path d="M15.1 9.2C13.6 4.6 2.5 3.9 2.5 15.6C2.5 23.9 8.4 28.4 15.1 26.4Z"/>
+<path d="M16.9 9.2C18.4 4.6 29.5 3.9 29.5 15.6C29.5 23.9 23.6 28.4 16.9 26.4Z"/>
+</svg>
