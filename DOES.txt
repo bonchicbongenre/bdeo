@@ -4,7 +4,11 @@ What bumsf.art does. A golf pass must keep every line true.
     its rear, under the print's own tail, in the print's own colours as sampled from
     the scan (whatever the page's theme). Two lobes of fur; between them a crease
     whose faces are the valve's walls, running down the canal to the outlet, a
-    puckered ring that opens as the walls part. Down, the canal's 3 mm at one scale;
+    puckered ring that opens as the walls part. The rump is full: its window is 0.3
+    of the print's width, the anus where it was; each lobe 0.6 of the half-width
+    across, set 0.34 of it either side of the cleft; its hatching left bare where
+    each cheek catches the light, high and outside, and cut heavier in its shade, low
+    and toward the cleft. Down, the canal's 3 mm at one scale;
     across, its gap is drawn stretched (.05 e/(e + 0.05 mm) of the half-width), and
     the outlet's opening at a wider stretch (.14 e/(e + 0.1 mm)), so that hundredths
     of a millimetre show. The rump sways as the walls move and flushes as it bears
@@ -28,7 +32,10 @@ What bumsf.art does. A golf pass must keep every line true.
     push going back to the key still held. Either knob may move while held: up
     and down (k and j) move the push a fiftieth of its travel, with Shift the tension
     a twentieth of its range. Left and right (h and l) turn the rump about its outlet,
-    counter-clockwise and clockwise, 5 degrees a press, from 40 degrees (toward the
+    counter-clockwise and clockwise, 5 degrees a press (10 from two points of
+    radness, onto the lanes' grid), and held they keep turning by the page's own
+    clock, a step after a quarter second and every 80 ms after, so that the rump
+    turns while another key bears down, from 40 degrees (toward the
     print's corner, where it starts) to 80 (nearly straight back), the turns at which
     it stays inside the cat; turned on past either end, for up to 15 degrees, it
     turns no further and the lobe on that side presses in, flatter. That pressing is
@@ -103,7 +110,8 @@ What bumsf.art does. A golf pass must keep every line true.
     second to four fifths.
     Pushed past gentle, a relaxed valve's rush ends in a pop as the flow is cut,
     and is heard. What is said of the last, for 4 s, then fading, on scraps of the
-    print's paper: a ninja'd one is asked after from outside the kot, at the height
+    print's paper, edged in its ink, lifted off it by a shadow and popped on as it is
+    said (still, for those who ask for less motion): a ninja'd one is asked after from outside the kot, at the height
     of its eyes, "did you fart?"; a heard one, at the tosses of a coin of its own
     (the sound's draws do not move when it is tossed), the kot owns from its mouth a
     quarter of the time, "bobo farted", the other exclaims at an eighth, "bobo!", and
@@ -120,12 +128,16 @@ What bumsf.art does. A golf pass must keep every line true.
     measured in houses (0.001 to 0.013 m^2/s, Cheng et al., 2011; an estimate). Each
     gas is smelt above its odour threshold (Nagata, Table 2: 0.00041, 0.000070 and
     0.0030 ppm). The label says what the strongest smells of, in Suarez's words:
-    "rotten eggs", "decomposing vegetables" or "sweet". The word stands in full while
-    the middle of the cloud is a thousand times over threshold and fades to nothing
-    as it falls to once over (the logarithm of the excess: an estimate). A fart that
-    can be smelt a metre away is "vonyuchaya" (Russian, stinky), loud or not. A
-    passage at Suarez's means, pushed out at 60 at rest, lets out 91 ml and is smelt
-    to 0.79 m for 78 seconds.
+    "rotten eggs", "decomposing vegetables" or "sweet". A little breeze, 0.1 m/s (an
+    estimate), carries each cloud off whole, its middle u t away by time t, so that at
+    the kot, where it was let out, it stands lower by exp(-u^2 t / 4 K) (Carslaw's
+    puff in evenly moving air); the label says what is smelt there. The word stands
+    in full while that is a thousand times over threshold and fades to nothing as it
+    falls to once over (the logarithm of the excess: an estimate). A fart that can be
+    smelt a metre away is "vonyuchaya" (Russian, stinky), loud or not. The 107 ml
+    passage at Suarez's means, pushed at 60 at rest, is smelt at the kot for 5.7
+    seconds; its cloud, carried off, is smelt out to 0.79 m about its middle and is
+    gone at 78 s. A new game begins in a fresh room, the air cleared.
 13. It is heard while held, and for as long as it still moves after: the rate of
     change of the flow through it, which is what a small opening sends out, and
     over it the hiss of the jet, white, in proportion to the flow (an estimate). One
@@ -197,7 +209,8 @@ What bumsf.art does. A golf pass must keep every line true.
     s; a banana or a carrot by a touch of any air. What is not walks on into the
     bum. The label keeps the count: "N blown away, N missed", and bananas and carrots
     taken. The beam reaches only the first thing waiting on its lane; what is behind
-    waits its turn, untouched. A mouse met by a beam of the wrong colour likes it ("ah, i like your farts,
+    waits its turn, untouched; and once the first is blown away or let by, the next
+    on that lane is untouched for 0.35 s, time to let go (an estimate). A mouse met by a beam of the wrong colour likes it ("ah, i like your farts,
     kot", and others in turn) and walks in; one blown away sometimes says so ("oh no,
     a stinky fart!", and others). What a mouse says stays over its lane's ring for 4
     s and then fades, whatever became of the mouse. A game runs from a press on the stage until three
@@ -214,7 +227,10 @@ What bumsf.art does. A golf pass must keep every line true.
     eighth shortens to 1/(1 + 0.15 N) s; from two points a line's notes alternate
     over two lanes, from four over three; from three there are five lanes, ten
     degrees apart; and some plain mice (0.15 N of them, at most 0.6) change colour
-    halfway down their walk. And each point lights the whole page a step more: the
+    halfway down their walk. And the kot keeps up: in a game the push rises over
+    0.05 s shortened as the eighth is, each thing needs that much less of the beam, a
+    held turn repeats that much faster, and from two points a turn goes 10 degrees.
+    And each point lights the whole page a step more: the
     ground drifts through the glazes' washes; the print's colours sway, and behind
     the page Mystify's lines bounce, after the old desktops' screensaver; everything
     turns slowly through the hues, and the print warps; the print rocks, and a
@@ -236,10 +252,14 @@ What bumsf.art does. A golf pass must keep every line true.
     stands at its threshold (sqrt(4 K t ln e) for an excess e at its middle: a 107
     ml passage at Suarez's means is smelt out to 0.79 m at 28.7 s and gone at 78 s),
     a metre drawn as 1.2 times the print's width (an estimate); carried a little
-    along the aim and rising, which is drawn so, the model's air being still; tinted
-    by its gas, sulphur-yellow for hydrogen sulphide, green for methanethiol, pink
-    for dimethyl sulphide; stink lines rising over it; and flies about a vonyuchaya
-    one. Over everything, faint enough that the mice show through. In the page's own
-    ink, light in the dark. Asked for less motion: no rings, no trembling, the word
+    along the aim and then off on the nose's breeze, leftward and a little up (the
+    way drawn so, each cloud a little either side of it), until it leaves the
+    window; tinted by its gas, sulphur-yellow for hydrogen sulphide, green for
+    methanethiol, pink for dimethyl sulphide; short stink lines rising from the two
+    newest; and flies about a vonyuchaya one, four at most. Each cloud has its own
+    lobes, turning, way, stink lines and flies' paths, from the moment it was let
+    out. Behind the page with the rings, so that nothing of the game is hidden;
+    those of one gas filled together once, so that many farts thicken the air no
+    more than the strongest. In the page's own ink, light in the dark. Asked for less motion: no rings, no trembling, the word
     still, the cloud still and plain. None of it is measured but the sound's
     strength and the cloud's size.

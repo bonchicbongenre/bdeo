@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Excuse me.</title>
-<meta name="description" content="Bear down.">
+<meta name="description" content="Next time, under the blanket.">
 <link rel="icon" href="favicon.svg">
 <link rel="stylesheet" href="tokens.css?5">
 <style>
@@ -14,14 +14,21 @@ main{flex:1}
 p{margin:0}
 #cat{position:relative;margin:0;line-height:0;overflow:hidden;container-type:inline-size}
 #cat img{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
-#win{position:absolute;left:-3%;top:75.7%;width:26%;line-height:normal;transform-origin:50% 57.5%}
+#win{position:absolute;left:-5%;top:74.28%;width:30%;line-height:normal;transform-origin:50% 57.5%}
 /* the windbag: the print's coiled tail, washed in the gas's grey as the store fills */
 #bag{position:absolute;left:20.1%;top:57.5%;width:33.8%;height:30.1%;opacity:0;pointer-events:none;
   background:radial-gradient(closest-side,#6b796d 70%,transparent);mix-blend-mode:multiply}
 /* words on scraps of the print's paper, in its ink: the kot's own, from its mouth; and
-   what is asked of it, from outside, at the height of its eyes */
-#kot,#ask{position:absolute;transform:translateY(-50%);margin:0;padding:.1em .35em;line-height:1.3;
-  font-size:max(12px,2.6cqw);font-style:italic;color:#523f35;background:#c5b896;transition:opacity .6s ease}
+   what is asked of it, from outside, at the height of its eyes. Each scrap edged in the
+   ink and lifted off the print by its shadow, and popped on as it is said, so that the
+   eye finds it over the farts and the mice */
+#kot,#ask{position:absolute;transform:translateY(-50%);margin:0;padding:.12em .4em;line-height:1.3;
+  font-size:max(14px,3.6cqw);font-style:italic;color:#3b2c25;background:#ddd1ad;border:1.5px solid #523f35;border-radius:2px;
+  box-shadow:.12em .18em 0 rgba(82,63,53,.6);z-index:1;transition:opacity .6s ease}
+@keyframes say{0%{transform:translateY(-50%) scale(.3) rotate(-8deg);opacity:0}
+  55%{transform:translateY(-50%) scale(1.15) rotate(3deg);opacity:1}100%{transform:translateY(-50%)}}
+#kot.said,#ask.said{animation:say .5s cubic-bezier(.2,.9,.3,1.3) both}
+@media (prefers-reduced-motion:reduce){#kot.said,#ask.said{animation:none}}
 #kot{right:25.5%;top:35.7%}
 #kot::after{content:"\00a0\2013"}
 #ask{right:38%;top:23.5%}
@@ -86,7 +93,7 @@ html.r5 body{animation-duration:8s}html.r5 main{animation-duration:12s}html.r5 #
 /* and the old desktops' screensavers behind the page, and the print warped (the script) */
 #saver{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;cursor:auto;display:none}
 html.r2 #saver{display:block}
-/* the fart in the room: its rings behind the page, its cloud and its word over it */
+/* the fart in the room: its rings and its cloud behind the page, its word over it */
 #room,#reek{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 #room{z-index:0}#reek{z-index:2}
 main,.by{position:relative;z-index:1}
@@ -198,7 +205,7 @@ kbd.on{transform:translateY(2px);box-shadow:none;outline:2px solid var(--ink);ou
 <p class="m" id="rad" aria-live="polite" hidden></p>
 <p>2026</p>
 <p class="d"><span id="self">&ndash;</span> bytes</p>
-<p class="l">Bear down.</p>
+<p class="l">Next time, under the blanket.</p>
 </div>
 <span class="btns"><button id="theme" hidden>dark</button><button id="glaze" hidden></button></span>
 </div>
@@ -357,7 +364,7 @@ const keep=()=>{const g=n/G8%HN;hx[g]=X;hv[g]=V;hp[g]=PE;ha[g]=blk;blk=0},
     while(queue.length&&queue[0][0]<=n){const on=queue.shift()[1];
       if(on&&!held){if(clench)heldIn();clench=true;peak=0;if(!fart)fill()}held=on}
     const goal=held?target:0;
-    P+=(goal-P)*(DT/(march?QUICK:goal>P?RISE:FALL));
+    P+=(goal-P)*(DT/(march?QUICK*stepNow():goal>P?RISE:FALL));
     PE=V0>0?P*min(1,store/(TAPER*V0)):0;
     step(PE);n++;pg(PE,X,V);du0=du1;du1=U;peak=max(peak,PE);
     if(U>0)clench=false;else if(clench&&!held&&P<1)heldIn();
@@ -394,18 +401,24 @@ reset();
 // instantaneous point source (Carslaw 1921, p. 150, Eq. 1), with one diffusivity for the
 // room, the middle of 0.001 to 0.013 m^2/s (Cheng et al. 2011, an estimate). At its
 // middle, at time t after, each gas stands at its threshold times
-// D V / (4 pi K t)^(3/2), and every fart adds its own. The smell is the gas that stands
-// highest; it is gone when none stands above its threshold. A fart that can be smelt a
-// metre away, D V at least (2 pi e / 3)^(3/2) m^3, is vonyuchaya.
-const KD=sqrt(.001*.013),FAR=(2*PI*Math.E/3)**1.5,
+// D V / (4 pi K t)^(3/2), and every fart adds its own. A little breeze, 0.1 m/s (an
+// estimate), carries the cloud off whole, its middle u t away by time t, so that at
+// the kot, where it was let out, it stands lower by exp(-u^2 t / 4 K) (Carslaw's puff
+// in air moving evenly). The smell is the gas that stands highest at the kot; it is
+// gone when none stands above its threshold there. A fart that can be smelt a metre
+// away, D V at least (2 pi e / 3)^(3/2) m^3, is vonyuchaya.
+const KD=sqrt(.001*.013),FAR=(2*PI*Math.E/3)**1.5,BREEZE=.1,
+  // how much of a cloud tau seconds old is left at the kot, the breeze having carried
+  // its middle off
+  carried=tau=>Math.exp(-BREEZE*BREEZE*tau/(4*KD)),
   smell=t=>{const e=[0,0,0];
-    for(const[t0,dv]of puffs)if(t>t0)for(let g=0;g<3;g++)e[g]+=dv[g]/(4*PI*KD*(t-t0))**1.5;
+    for(const[t0,dv]of puffs)if(t>t0)for(let g=0;g<3;g++)e[g]+=dv[g]/(4*PI*KD*(t-t0))**1.5*carried(t-t0);
     let lead=0;for(let g=1;g<3;g++)if(e[g]>e[lead])lead=g;
-    const von=puffs.some(([t0,dv])=>t>t0&&max(...dv)>=FAR&&max(...dv)/(4*PI*KD*(t-t0))**1.5>=1);
+    const von=puffs.some(([t0,dv])=>t>t0&&max(...dv)>=FAR&&max(...dv)/(4*PI*KD*(t-t0))**1.5*carried(t-t0)>=1);
     return{e:e[lead],lead,von}};
-// the label's last word on it: what it smells of, shown in full while the middle of the
-// cloud stands a thousand times over threshold and fading to nothing as it falls to
-// once over (the word's strength the logarithm of the excess, an estimate)
+// the label's last word on it: what it smells of, shown in full while it stands a
+// thousand times over threshold at the kot and fading to nothing as it falls to once
+// over (the word's strength the logarithm of the excess, an estimate)
 let sniffing=0;
 const sniff=()=>{const t=performance.now()/1e3,el=$("smell");
   puffs=puffs.filter(([t0,dv])=>t<=t0||max(...dv)/(4*PI*KD*(t-t0))**1.5>=1e-3);
@@ -524,7 +537,8 @@ const S=$("sec"),K=$("k"),gs=S.getContext("2d"),gk=K.getContext("2d"),
   calm=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let shown="a valve, shut",counted="",queued=0,told=0;
 // words on a scrap ("kot" its own, "ask" the other's), shown for 4 s, then fading
-const speak=(id,text)=>{const k=$(id);k.textContent=text;k.className="";clearTimeout(k.hush);k.hush=setTimeout(()=>k.className="gone",4e3)};
+const speak=(id,text)=>{const k=$(id);k.textContent=text;k.className="";void k.offsetWidth;k.className="said";
+  clearTimeout(k.hush);k.hush=setTimeout(()=>k.className="gone",4e3)};
 // The stage, on a wide screen: three lanes run back from the bum at the turns it can
 // aim, each with a ring a little way out, where what walks it meets the beam; the lane
 // the bum is aimed at, within 5 degrees, drawn heavier. Measured from where the bum is
@@ -566,7 +580,7 @@ const STEP=1,WALK=6,PRE=1/3,POST=1.2,BANDS=["#6b796d","#baac6c","#a95330"],
   band=pe=>{const u=travelAt(pe/CM);return u<1/3?0:u<2/3?1:2},
   gnow=()=>performance.now()/1e3;
 let march=null,walkers=[],blown=0,missed=0,bananas=0,carrots=0,letIn=0,streak=0,best=0,herd=362436069,sheet=null,lastT=0,
-  rad=0,chain=0,chains=0,scraps=[],saving=0,polys=null,stars=null,frame=0;
+  rad=0,chain=0,chains=0,scraps=[],lull={},saving=0,polys=null,stars=null,frame=0;
 // Radness's screensavers, after the old desktops', behind the page: from two points,
 // Mystify, two four-cornered lines bouncing about the window, each trailing seven ghosts
 // of itself, in the glazes' accents in turn; from four, a starfield flying out from
@@ -598,19 +612,20 @@ const SV=$("saver"),gv=SV.getContext("2d"),
 // count when it gets in; it is hurt only once there is radness, a loud beam needing
 // 0.3 s over the points to blow it away. Each point lights the page a step more (the
 // styles, above).
-const CHAIN=6,SAY=4,
+const CHAIN=6,SAY=4,LULL=.35,
   // a mouse's words, kept where they were said, at its lane's ring, outliving it
   say=(w,k,t)=>scraps.push({text:words(k),deg:w.deg,at:t}),
   radden=()=>{rad++;for(let i=1;i<=5;i++)document.documentElement.classList.toggle("r"+i,rad>=i);
     $("rad").textContent="radness "+rad;$("rad").hidden=false;if(!saving&&!calm&&rad>=2)saving=requestAnimationFrame(saver)},
-  needOf=w=>w.kind=="B"?(rad?NEED.B/rad:Infinity):NEED[w.kind],
+  // what a thing needs of the beam, shortened with the song's eighth as radness quickens it
+  needOf=w=>(w.kind=="B"?(rad?NEED.B/rad:Infinity):NEED[w.kind])*stepNow(),
   counts=w=>!free(w.kind)&&w.kind!="B",
   // a mouse blown away: the run and the chain grow, and a chain long enough earns a point
   felled=(w,t)=>{blown++;letIn=0;best=max(best,++streak);if(++chain>=CHAIN+chains){chain=0;chains++;radden()}
     if(coin(.35))say(w,"died",t)},
   // what is not blown away walks on into the bum; a mouse that counts breaks the run and
   // the chain as it is let by
-  walkIn=(w,t)=>{w.fate="walks";w.at=t;if(counts(w))streak=chain=0};
+  walkIn=(w,t)=>{w.fate="walks";w.at=t;lull[w.deg]=t+LULL;if(counts(w))streak=chain=0};
 const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return herd/4294967296},
   // the herd for the notes to come, up to the one arriving a walk and a step from now;
   // the first a walk after the press
@@ -632,16 +647,18 @@ const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return he
       sprite:floor(roll()*MICE.length),wide:(kind=="A"?.8:kind=="B"?1.25:1)*(.94+.12*roll()),fate:null});
     if(++march.i==line.length){march.i=0;march.line++;march.start+=LINE*march.step;march.step=stepNow()}}},
   // what waits at its ring is worked on by the beam as it is now, for the frame's time;
-  // the beam reaches only the first in each lane, and those behind it wait their turn
+  // the beam reaches only the first in each lane, and those behind it wait their turn;
+  // and once the first is gone, blown away or let by, the next is untouched for 0.35 s
+  // (an estimate: time to see it go and let go)
   meet=(t,g,dt)=>{const open=edge(g)>0,b=band(target),loud=rasp>=HEARD,fronts=new Set();
     for(const w of walkers)if(w.turn&&t>=w.turn.at){w.band=w.turn.band;w.turn=null}
     for(const w of walkers)if(w.fate==null&&t>=w.arrive-PRE){
       // a beam of the wrong colour a mouse likes, and lets it walk in
-      const front=!fronts.has(w.deg),on=front&&open&&abs(tilt-w.deg)<5;fronts.add(w.deg);
+      const front=!fronts.has(w.deg),on=front&&open&&abs(tilt-w.deg)<5&&t>=(lull[w.deg]||0);fronts.add(w.deg);
       if(on&&!free(w.kind)&&b!=w.band){walkIn(w,t);say(w,"liked",t);continue}
       w.lit=on&&(free(w.kind)||(w.kind!="A"||!loud)&&(w.kind!="B"||loud));
       if(w.lit)w.got+=dt;
-      if(w.got>=needOf(w)){w.fate="blown";w.at=t;
+      if(w.got>=needOf(w)){w.fate="blown";w.at=t;lull[w.deg]=t+LULL;
         if(w.kind=="banana"){bananas++;radden()}else if(w.kind=="carrot")loved();
         else felled(w,t)}
       else if(t>w.arrive+POST)walkIn(w,t)}},
@@ -664,7 +681,9 @@ const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return he
   // a game: from a press on the stage, until the kot lets three mice in in a row; then
   // the procession stops and its score is shown, until a press begins the next
   startMarch=()=>{loadSheet();if(march)return;
-    blown=missed=bananas=carrots=letIn=streak=best=chain=chains=0;walkers=[];scraps=[];$("score").hidden=true;
+    blown=missed=bananas=carrots=letIn=streak=best=chain=chains=0;walkers=[];scraps=[];lull={};$("score").hidden=true;
+    // and the air: a new game begins in a fresh room
+    puffs=[];sniff();
     // radness belongs to a game, and goes with it
     rad=0;for(let i=1;i<=5;i++)document.documentElement.classList.toggle("r"+i,false);$("rad").hidden=true;
     $("disp").setAttribute("scale","0");
@@ -757,12 +776,17 @@ const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return he
 // only hissed. What is smelt: each fart's cloud as wide as the nose model smells it, out
 // to where its leading gas stands at its threshold, sqrt(4 K t ln e) for an excess e at
 // its middle (Carslaw's puff, above), a metre drawn as 1.2 times the print's width (an
-// estimate), carried a little along the aim and rising (drawn so; the model's air is
-// still), tinted by its gas, stink lines rising over it, and flies at a vonyuchaya one.
+// estimate), carried a little along the aim (drawn so) and then off with the nose's
+// breeze, its middle u t away, leftward and a little up (the way drawn so), until it
+// leaves the window; tinted by its gas, stink lines rising over it, and flies at a
+// vonyuchaya one.
 // None of it is measured but the sound's strength and the cloud's size. Those who ask
 // for less motion get the word and the cloud, still.
 const ROOM=$("room"),gr=ROOM.getContext("2d"),REEK=$("reek"),gq=REEK.getContext("2d"),
   TINTS=["#b3a640","#76884a","#b48596"],M_PX=1.2,
+  // a number in [0, 1) for a cloud let out at t0, the k-th of its own: its shape, its
+  // way and its flies, the same each frame, different from the next cloud's
+  jit=(t0,i)=>{const s=Math.sin(t0*12.9898+78.233*i)*43758.5453;return s-floor(s)},
   // a fart's cloud tau seconds after: its leading gas, the excess at its middle, and how
   // far out it is smelt (m)
   cloudOf=(dv,tau)=>{let lead=0,e=0;for(let g=0;g<3;g++){const x=dv[g]/(4*PI*KD*tau)**1.5;if(x>e){e=x;lead=g}}
@@ -793,22 +817,39 @@ const hearing=(now,song)=>{const tw=performance.now()/1e3;let lv=0;
       for(let i=0;i<=96;i++){const th=i/96*2*PI,rr=r0*(1+.025*Math.sin(lobes*th+ph)),x=bx+rr*Math.cos(th),y=by+rr*Math.sin(th);i?gr.lineTo(x,y):gr.moveTo(x,y)}
       gr.stroke()}
     gr.setLineDash([]);gr.globalAlpha=1;
-    // the clouds, over everything, faint enough to see the mice through
-    const aa=tilt*PI/180,ax=-Math.sin(aa),ay=Math.cos(aa);let reeking=false;
-    for(const[t0,dv]of puffs){const tau=t-t0;if(tau<=0)continue;const[lead,e,rm]=cloudOf(dv,tau);if(!rm)continue;reeking=true;
-      const R=rm*M_PX*pw,carry=.15*pw*(1-Math.exp(-tau)),cx=bx+ax*carry,cy=by+ay*carry-.008*pw*tau,s=min(1,Math.log10(e)/3);
-      gq.globalAlpha=.04+.16*s;gq.fillStyle=TINTS[lead];gq.beginPath();
-      for(let k=0;k<7;k++){const a=k/7*2*PI+(calm?0:tau*.15),px=cx+Math.cos(a)*.42*R,py=cy+Math.sin(a)*.3*R;gq.moveTo(px+.55*R,py);gq.arc(px,py,.55*R,0,2*PI)}
-      gq.fill();
-      if(calm)continue;
-      gq.globalAlpha=.5*s;gq.strokeStyle=ink;gq.lineWidth=max(1,.005*pw);gq.beginPath();
-      for(const fx of[-.35,0,.35])for(let i=0;i<=20;i++){const u=i/20,x=cx+fx*R+Math.sin(u*9-t*4+fx*5)*.06*R,y=cy+.2*R-u*1.1*R;i?gq.lineTo(x,y):gq.moveTo(x,y)}
-      gq.stroke();
-      if(max(...dv)>=FAR)for(let k=0;k<3;k++){const p=t*(2.3+.7*k)+2.1*k,fx=cx+Math.sin(1.7*p)*.6*R,fy=cy+Math.cos(1.3*p+k)*.45*R,
-          u=max(2.5,.011*pw),fl=Math.sin(60*t+k)*.4*u;
-        gq.globalAlpha=.9;gq.fillStyle=ink;gq.beginPath();gq.ellipse(fx,fy,1.1*u,.8*u,0,0,2*PI);gq.fill();
-        gq.globalAlpha=.4;gq.beginPath();gq.ellipse(fx-.9*u,fy-u-fl,1.4*u,.75*u,-.6,0,2*PI);gq.ellipse(fx+.9*u,fy-u+fl,1.4*u,.75*u,.6,0,2*PI);gq.fill()}}
-    gq.globalAlpha=1;
+    // the clouds, behind the page with the rings, so that nothing of the game is hidden.
+    // Each its own: its lobes, their turning, its way on the breeze, its stink lines and
+    // its flies drawn from the moment it was let out. Those of one gas are filled
+    // together, once, so that many farts thicken the air no more than the strongest
+    // of them; short stink lines rise from the two newest; four flies at most
+    const aa=tilt*PI/180,ax=-Math.sin(aa),ay=Math.cos(aa),clouds=[];
+    for(const[t0,dv]of puffs){const tau=t-t0;if(tau<=0)continue;const[lead,e,rm]=cloudOf(dv,tau);if(!rm)continue;
+      const R=rm*M_PX*pw,carry=.15*pw*(1-Math.exp(-tau)),gust=(jit(t0,1)-.5)*.6,way=.8+.4*jit(t0,2),
+        drift=BREEZE*tau*M_PX*pw*way,wx=-.95*Math.cos(gust)+.31*Math.sin(gust),wy=-.31*Math.cos(gust)-.95*Math.sin(gust),
+        cx=bx+ax*carry+wx*drift,cy=by+ay*carry+wy*drift;
+      if(cx+R<0||cy+R<0||cx-R>W||cy-R>H)continue;
+      clouds.push({t0,tau,lead,R,cx,cy,s:min(1,Math.log10(e)/3),von:max(...dv)>=FAR})}
+    for(let gi=0;gi<3;gi++){const mine=clouds.filter(c=>c.lead==gi);if(!mine.length)continue;
+      gr.globalAlpha=.05+.13*max(...mine.map(c=>c.s));gr.fillStyle=TINTS[gi];gr.beginPath();
+      for(const c of mine){const lobes=5+floor(3*jit(c.t0,3)),turn=6.3*jit(c.t0,4)+(calm?0:c.tau*(jit(c.t0,5)-.5)*.4);
+        for(let k=0;k<lobes;k++){const a=k/lobes*2*PI+turn,rr=c.R*(.42+.2*jit(c.t0,10+k)),px=c.cx+Math.cos(a)*.42*c.R,py=c.cy+Math.sin(a)*.3*c.R;
+          gr.moveTo(px+rr,py);gr.arc(px,py,rr,0,2*PI)}}
+      gr.fill()}
+    if(!calm){const fresh=clouds.slice().sort((p,q)=>q.t0-p.t0);
+      gr.strokeStyle=ink;gr.lineWidth=max(1,.005*pw);
+      for(const c of fresh.slice(0,2)){const lines=2+floor(2*jit(c.t0,6));gr.globalAlpha=.45*c.s;gr.beginPath();
+        for(let j=0;j<lines;j++){const fx=(j/(lines-1||1)-.5)*.7+(jit(c.t0,20+j)-.5)*.2,fq=6+5*jit(c.t0,30+j),sp=2.5+2.5*jit(c.t0,40+j),ph=6.3*jit(c.t0,50+j);
+          for(let i=0;i<=20;i++){const u=i/20,x=c.cx+fx*c.R+Math.sin(u*fq-t*sp+ph)*.06*c.R,y=c.cy+.1*c.R-u*(.5+.3*jit(c.t0,60+j))*c.R;i?gr.lineTo(x,y):gr.moveTo(x,y)}}
+        gr.stroke()}
+      let flies=0;
+      for(const c of fresh)if(c.von)for(let k=0;k<2+floor(2*jit(c.t0,7))&&flies<4;k++,flies++){
+        const f=i=>jit(c.t0,70+10*k+i),fx=c.cx+(Math.sin(t*(1.3+2*f(0))+6.3*f(1))*.45+Math.sin(t*(3.1+3*f(2))+6.3*f(3))*.2)*c.R,
+          fy=c.cy+(Math.cos(t*(1.1+2*f(4))+6.3*f(5))*.35+Math.sin(t*(2.7+3*f(6))+6.3*f(7))*.15)*c.R,
+          u=max(2.5,.011*pw),fl=Math.sin(60*t+6.3*f(8))*.4*u;
+        gr.globalAlpha=.9;gr.fillStyle=ink;gr.beginPath();gr.ellipse(fx,fy,1.1*u,.8*u,0,0,2*PI);gr.fill();
+        gr.globalAlpha=.4;gr.beginPath();gr.ellipse(fx-.9*u,fy-u-fl,1.4*u,.75*u,-.6,0,2*PI);gr.ellipse(fx+.9*u,fy-u+fl,1.4*u,.75*u,.6,0,2*PI);gr.fill()}}
+    const reeking=clouds.length>0;
+    gr.globalAlpha=1;
     // the word, over the haunch, edged in the print's paper
     if(blurt&&blurt.done&&t-blurt.end>1.2)blurt=null;
     if(blurt){const wd=wordFor(blurt.loud,blurt.len,blurt.done),fs=(blurt.loud?.06+.03*min(1,sqrt(loud/.6)):.04)*pw;
@@ -858,28 +899,38 @@ const look=()=>{
     // a face on side s: from the foot of the crease down the canal to the outlet
     face=s=>{gs.moveTo(cx,yA);gs.lineTo(cx+s*w1,yI);if(zc>=0)gs.lineTo(cx,Y(zc));gs.lineTo(cx+s*w2,yO)};
   gs.clearRect(0,0,sw,sh);gs.lineJoin=gs.lineCap="round";
-  // the rump: one round of fur, two-lobed, its outline only outside; the lobe on the
+  // the rump: one round of fur, two full lobes, its outline only outside; the lobe on the
   // side the bum is turned against pressed in and flatter; flushing as it bears down
-  // (the lobes stand .3 of the half-width either side, so that the outlet sits in the
+  // (the lobes stand .34 of the half-width either side, so that the outlet sits in the
   // notch between their bottoms)
-  const ang=tilt*PI/180,ca=Math.cos(ang),sa=Math.sin(ang),sway=.3*wide(x),ry=.45*sh,ly=yO-ry*Math.sqrt(1-.55*.55),
-    rump=()=>{gs.beginPath();for(const s of[1,-1]){const q=s==pside?press:0,lx=cx+s*((.3-.08*q)*cx+sway),rx=.55*(1-.12*q)*cx;
-      gs.moveTo(lx+rx,ly);gs.ellipse(lx,ly,rx,ry,0,0,2*PI)}};
-  rump();gs.strokeStyle=INK;gs.lineWidth=2*lw;gs.stroke();rump();gs.fillStyle=FUR;gs.fill();
+  const ang=tilt*PI/180,ca=Math.cos(ang),sa=Math.sin(ang),sway=.3*wide(x),ry=.49*sh,ly=yO-ry*Math.sqrt(1-(.34/.6)**2),
+    lobes=[1,-1].map(s=>{const q=s==pside?press:0;return{s,lx:cx+s*((.34-.08*q)*cx+sway),rx:.6*(1-.12*q)*cx}}),
+    rump=()=>{gs.beginPath();for(const o of lobes){gs.moveTo(o.lx+o.rx,ly);gs.ellipse(o.lx,ly,o.rx,ry,0,0,2*PI)}};
+  rump();gs.strokeStyle=INK;gs.lineWidth=2.6*lw;gs.stroke();rump();gs.fillStyle=FUR;gs.fill();
   gs.globalAlpha=.12*min(1,pressure/full);gs.fillStyle=BLUSH;gs.fill();gs.globalAlpha=1;
   // hatched with the print's own grain, each stroke turned as the print's strokes run
   // where it lies on the plate, however the bum is turned; in rows across the grain at
-  // the rump's middle, a little uneven. Drawn in a frame upright on the page, from the
-  // outlet; k turns its pixels into the plate's
+  // the rump's middle, a little uneven; modelled as the cutter models: each cheek left
+  // bare where it catches the light, high and outside, and cut heavier in its shade, low
+  // and toward the cleft. Drawn in a frame upright on the page, from the outlet; k turns
+  // its pixels into the plate's (the window being .3 of the plate's width)
   gs.save();rump();gs.clip();gs.translate(cx,yO);gs.rotate(-ang);
-  const R=.85*cx,ox=-(ly-yO)*sa,oy=(ly-yO)*ca,k=.26*1280/sw,row=10*lw,step=4.2*lw,
+  const R=.95*cx,ox=-(ly-yO)*sa,oy=(ly-yO)*ca,k=.3*1280/sw,row=10*lw,step=4.2*lw,
     tc=grain(ANUS[0]+ox*k,ANUS[1]+oy*k),dx=Math.cos(tc),dy=Math.sin(tc),ni=Math.ceil(1.4*R/row),nj=Math.ceil(1.4*R/step);
-  gs.beginPath();
+  const heavy=[];gs.beginPath();
   for(let i=-ni;i<=ni;i++)for(let j=-nj;j<=nj;j++){
     const a=i*row,b=(j+(i&1)/2)*step,u=ox+a*dx-b*dy,y=oy+a*dy+b*dx,th=grain(ANUS[0]+u*k,ANUS[1]+y*k),
-      h=((i*7919+j*104729)%1000+1000)%1000/1000,len=.36*row*(.85+.3*h),c=len*Math.cos(th),d=len*Math.sin(th);
+      h=((i*7919+j*104729)%1000+1000)%1000/1000,len=.36*row*(.85+.3*h),c=len*Math.cos(th),d=len*Math.sin(th),
+      px=cx+u*ca+y*sa,py=yO-u*sa+y*ca;
+    // where it lies on its nearer cheek, in that cheek's own measure
+    let near=9,sl=1,nx=0,ny=0;
+    for(const o of lobes){const ex=(px-o.lx)/o.rx,ey=(py-ly)/ry,r2=ex*ex+ey*ey;if(r2<near){near=r2;sl=o.s;nx=ex;ny=ey}}
+    if(((nx-.38*sl)/.3)**2+((ny+.42)/.24)**2<1)continue;
+    if(near>.4&&(ny>.15||nx*sl<-.35)){heavy.push(u-c,y-d,u+c,y+d);continue}
     gs.moveTo(u-c,y-d);gs.lineTo(u+c,y+d)}
-  gs.strokeStyle=INK;gs.lineWidth=1.5*lw;gs.stroke();gs.restore();
+  gs.strokeStyle=INK;gs.lineWidth=1.5*lw;gs.stroke();
+  gs.beginPath();for(let i=0;i<heavy.length;i+=4){gs.moveTo(heavy[i],heavy[i+1]);gs.lineTo(heavy[i+2],heavy[i+3])}
+  gs.lineWidth=2.6*lw;gs.stroke();gs.restore();
   // the crease and the canal under it: flushed inside by the push, edged in ink
   gs.beginPath();gs.moveTo(cx,yA);gs.lineTo(cx+w1,yI);if(zc>=0)gs.lineTo(cx,Y(zc));gs.lineTo(cx+w2,yO);
   gs.lineTo(cx-w2,yO);if(zc>=0)gs.lineTo(cx,Y(zc));gs.lineTo(cx-w1,yI);gs.closePath();
@@ -947,7 +998,7 @@ addEventListener("resize",ask);
 // fiftieth of the knob's travel, and with Shift the tension a twentieth of its range.
 // An arrow on a focused knob is the knob's own. On a narrow screen, pads under the
 // stage stand for h and l, s, d and f, each held as long as it is touched.
-let aim=40,tilt=40,press=0,pside=1,downs=[];
+let aim=40,tilt=40,press=0,pside=1,downs=[],turning={};
 const point=()=>{tilt=min(80,max(40,aim));press=abs(aim-tilt)/15;pside=aim<40?1:-1;
     win.style.transform="rotate("+tilt+"deg)";ask()},
   nudge=(id,by)=>{const k=$(id),lo=+k.min,hi=+k.max;k.value=String(min(hi,max(lo,+k.value+by*(hi-lo))));k.oninput({target:k})},
@@ -958,17 +1009,26 @@ const point=()=>{tilt=min(80,max(40,aim));press=abs(aim-tilt)/15;pside=aim<40?1:
   cap=(k,on)=>{const c=$("cap-"+(k==" "?"space":/^(arrowleft|h)$/i.test(k)?"h":/^(arrowright|l)$/i.test(k)?"l":
       /^(arrowup|k)$/i.test(k)?"k":/^(arrowdown|j)$/i.test(k)?"j":k));
     if(c)c.classList.toggle("on",on)},
-  letGo=()=>{for(const k of[" ","s","d","f","h","l","k","j"])cap(k,false);if(downs.length){downs=[];hold(false)}},
+  letGo=()=>{for(const k of[" ","s","d","f","h","l","k","j"])cap(k,false);for(const k in turning)unsteer(k);if(downs.length){downs=[];hold(false)}},
+  // a turn, 5 degrees, or from two points of radness 10, onto the grid of that step so
+  // that a press lands on a lane
+  turnBy=s=>{const d=rad>=2?10:5;aim=min(95,max(25,round((aim+s*d)/d)*d));point()},
+  // a turn key (or pad) held keeps turning, a step at once, the next after a quarter
+  // second and then every 80 ms (both shortened with the eighth as radness quickens
+  // it), by the page's own clock and not the keyboard's repeat, which stops when
+  // another key goes down; so the bum can turn while it bears down
+  steer=(k,s)=>{turnBy(s);const more=()=>{turnBy(s);turning[k]=setTimeout(more,80*stepNow())};turning[k]=setTimeout(more,250*stepNow())},
+  unsteer=k=>{if(k in turning){clearTimeout(turning[k]);delete turning[k]}},
   // a key (or a pad) down: whether it was one of the page's
   keyDown=(k,shift)=>{cap(k,true);
     if(k==" "||Object.hasOwn(THIRDS,k)){if(!downs.includes(k)){downs.push(k);colour(k);if(downs.length==1)hold(true)}}
-    else if(/^(arrowleft|h)$/i.test(k)){aim=max(25,aim-5);point()}
-    else if(/^(arrowright|l)$/i.test(k)){aim=min(95,aim+5);point()}
+    else if(/^(arrowleft|h)$/i.test(k)){if(!(k in turning))steer(k,-1)}
+    else if(/^(arrowright|l)$/i.test(k)){if(!(k in turning))steer(k,1)}
     else if(/^(arrowup|k)$/i.test(k))nudge(shift?"q":"p",shift?.05:.02);
     else if(/^(arrowdown|j)$/i.test(k))nudge(shift?"q":"p",shift?-.05:-.02);
     else return false;
     return true},
-  keyUp=k=>{cap(k,false);const i=downs.indexOf(k);if(i<0)return;downs.splice(i,1);if(!downs.length)hold(false);else colour(downs[downs.length-1])},
+  keyUp=k=>{cap(k,false);unsteer(k);const i=downs.indexOf(k);if(i<0)return;downs.splice(i,1);if(!downs.length)hold(false);else colour(downs[downs.length-1])},
   named=e=>e.key.length==1?e.key.toLowerCase():e.key;
 point();
 addEventListener("keydown",e=>{const k=named(e),tag=e.target.tagName||"";
@@ -976,13 +1036,10 @@ addEventListener("keydown",e=>{const k=named(e),tag=e.target.tagName||"";
   if(keyDown(k,e.shiftKey))e.preventDefault()});
 addEventListener("keyup",e=>keyUp(named(e)));
 addEventListener("blur",letGo);
-// a turn pad held keeps turning, a step every 80 ms after the first quarter second, as a
-// held key repeats
-for(const b of $("pads").children){const k=b.dataset.k,turns=k=="h"||k=="l";let again=0;
-  const more=()=>{keyDown(k);again=setTimeout(more,80)};
-  b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture&&b.setPointerCapture(e.pointerId);keyDown(k);
-    if(turns){clearTimeout(again);again=setTimeout(more,250)}};
-  b.onpointerup=b.onpointercancel=()=>{clearTimeout(again);keyUp(k)};b.oncontextmenu=e=>e.preventDefault()}
+// a pad is its key, held as long as it is touched (a turn pad turning on as a turn key does)
+for(const b of $("pads").children){const k=b.dataset.k;
+  b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture&&b.setPointerCapture(e.pointerId);keyDown(k)};
+  b.onpointerup=b.onpointercancel=()=>keyUp(k);b.oncontextmenu=e=>e.preventDefault()}
 $("pads").hidden=false;
 // The stage itself: a touch on a lane aims the bum down it, the lane nearest the finger,
 // and the bum follows the finger from lane to lane while it is held, so that one hand
