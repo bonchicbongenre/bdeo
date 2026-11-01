@@ -548,7 +548,7 @@ const STEP=1,WALK=6,PRE=1/3,POST=1.2,BANDS=["#6b796d","#baac6c","#a95330"],
   band=pe=>{const u=travelAt(pe/CM);return u<1/3?0:u<2/3?1:2},
   gnow=()=>performance.now()/1e3;
 let march=null,walkers=[],blown=0,missed=0,bananas=0,carrots=0,letIn=0,streak=0,best=0,herd=362436069,sheet=null,lastT=0,
-  rad=0,rounds={},saving=0,polys=null,stars=null,frame=0;
+  rad=0,chain=0,chains=0,scraps=[],saving=0,polys=null,stars=null,frame=0;
 // Radness's screensavers, after the old desktops', behind the page: from two points,
 // Mystify, two four-cornered lines bouncing about the window, each trailing seven ghosts
 // of itself, in the glazes' accents in turn; from four, a starfield flying out from
@@ -575,18 +575,24 @@ const SV=$("saver"),gv=SV.getContext("2d"),
     if(rad>=3&&frame++%3==0){$("disp").setAttribute("scale",String(8+6*(rad-3)));
       $("turb").setAttribute("baseFrequency",(.006+.002*Math.sin(t*.7)).toFixed(4)+" "+(.01+.003*Math.cos(t*.5)).toFixed(4))}
     saving=requestAnimationFrame(saver)};
-// Radness, for the visit: a point for a banana, and a point for a round of the song (its
-// fifteen notes) in which no mouse that counts got in. An IR-B does not count when it
-// gets in; it is hurt only once there is radness, a loud beam needing 0.3 s over the
-// points to blow it away. Each point lights the page a step more (the styles, above).
-const radden=()=>{rad++;for(let i=1;i<=5;i++)document.documentElement.classList.toggle("r"+i,rad>=i);
+// Radness, for the game: a point for a banana, and a point for a chain of mice blown away
+// in a row, six for the first, then seven more, then eight, and on. An IR-B does not
+// count when it gets in; it is hurt only once there is radness, a loud beam needing
+// 0.3 s over the points to blow it away. Each point lights the page a step more (the
+// styles, above).
+const CHAIN=6,SAY=4,
+  // a mouse's words, kept where they were said, at its lane's ring, outliving it
+  say=(w,k,t)=>scraps.push({text:words(k),deg:w.deg,at:t}),
+  radden=()=>{rad++;for(let i=1;i<=5;i++)document.documentElement.classList.toggle("r"+i,rad>=i);
     $("rad").textContent="radness "+rad;$("rad").hidden=false;if(!saving&&!calm&&rad>=2)saving=requestAnimationFrame(saver)},
   needOf=w=>w.kind=="B"?(rad?NEED.B/rad:Infinity):NEED[w.kind],
   counts=w=>!free(w.kind)&&w.kind!="B",
-  // a note settled, blown away or let by: when its round's last is, and no mouse that
-  // counts got in, the round earns its point
-  reckon=w=>{const r=rounds[w.round]=rounds[w.round]||{left:SONG[0].length+SONG[1].length,missed:0};
-    r.left--;if(w.fate=="walks"&&counts(w))r.missed++;if(!r.left&&!r.missed)radden()};
+  // a mouse blown away: the run and the chain grow, and a chain long enough earns a point
+  felled=(w,t)=>{blown++;letIn=0;best=max(best,++streak);if(++chain>=CHAIN+chains){chain=0;chains++;radden()}
+    if(coin(.35))say(w,"died",t)},
+  // what is not blown away walks on into the bum; a mouse that counts breaks the run and
+  // the chain as it is let by
+  walkIn=(w,t)=>{w.fate="walks";w.at=t;if(counts(w))streak=chain=0};
 const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return herd/4294967296},
   // the herd for the notes to come, up to the one arriving a walk and a step from now;
   // the first a walk after the press
@@ -605,7 +611,7 @@ const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return he
     const band=hue(semi),r=roll(),f=roll(),kind=f<.03?"banana":f<.055?"carrot":r<.12?(band?"B":"A"):"",
       turn=kind==""&&roll()<min(.6,.15*rad)?{at:arrive-WALK/2,band:(band+1+floor(roll()*2))%3}:null;
     walkers.push({deg:march.lanes[march.i%march.lanes.length],arrive,kind,band,turn,hz:440*2**(semi/12),got:0,lit:false,
-      round:march.line>>1,sprite:floor(roll()*MICE.length),wide:(kind=="A"?.8:kind=="B"?1.25:1)*(.94+.12*roll()),fate:null});
+      sprite:floor(roll()*MICE.length),wide:(kind=="A"?.8:kind=="B"?1.25:1)*(.94+.12*roll()),fate:null});
     if(++march.i==line.length){march.i=0;march.line++;march.start+=LINE*march.step;march.step=stepNow()}}},
   // what waits at its ring is worked on by the beam as it is now, for the frame's time;
   // the beam reaches only the first in each lane, and those behind it wait their turn
@@ -614,13 +620,13 @@ const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return he
     for(const w of walkers)if(w.fate==null&&t>=w.arrive-PRE){
       // a beam of the wrong colour a mouse likes, and lets it walk in
       const front=!fronts.has(w.deg),on=front&&open&&abs(tilt-w.deg)<5;fronts.add(w.deg);
-      if(on&&!free(w.kind)&&b!=w.band){w.fate="walks";w.at=t;w.said={text:words("liked"),at:t};reckon(w);continue}
+      if(on&&!free(w.kind)&&b!=w.band){walkIn(w,t);say(w,"liked",t);continue}
       w.lit=on&&(free(w.kind)||(w.kind!="A"||!loud)&&(w.kind!="B"||loud));
       if(w.lit)w.got+=dt;
       if(w.got>=needOf(w)){w.fate="blown";w.at=t;
         if(w.kind=="banana"){bananas++;radden()}else if(w.kind=="carrot")loved();
-        else{blown++;letIn=0;best=max(best,++streak);if(coin(.35))w.said={text:words("died"),at:t}}reckon(w)}
-      else if(t>w.arrive+POST){w.fate="walks";w.at=t;reckon(w)}}},
+        else felled(w,t)}
+      else if(t>w.arrive+POST)walkIn(w,t)}},
   // the song as things make it: each its note as it reaches its ring, plucked (a
   // triangle wave dying away over a third of a second), scheduled a little ahead
   ticks=t=>{if(!ac||!ac.createOscillator)return;
@@ -632,14 +638,15 @@ const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return he
     if(march)muster(t);
     ticks(t);
     meet(t,g,dt);
-    walkers=walkers.filter(w=>{const stay=w.said?1.8:0;
-      if(w.fate=="walks"&&t-w.at>max(STEP,stay)){if(counts(w)){missed++;letIn++;streak=0}return false}
-      return!(w.fate=="blown"&&t-w.at>max(.8,stay))});
+    walkers=walkers.filter(w=>{
+      if(w.fate=="walks"&&t-w.at>STEP){if(counts(w)){missed++;letIn++}return false}
+      return!(w.fate=="blown"&&t-w.at>.8)});
+    scraps=scraps.filter(s=>t-s.at<SAY);
     if(march&&letIn>=3)over()},
-  // a game: from a press on the stage, until the kot lets ten mice in in a row; then the
-  // procession stops and its score is shown, until a press begins the next
+  // a game: from a press on the stage, until the kot lets three mice in in a row; then
+  // the procession stops and its score is shown, until a press begins the next
   startMarch=()=>{loadSheet();if(march)return;
-    blown=missed=bananas=carrots=letIn=streak=best=0;walkers=[];rounds={};$("score").hidden=true;
+    blown=missed=bananas=carrots=letIn=streak=best=chain=chains=0;walkers=[];scraps=[];$("score").hidden=true;
     // radness belongs to a game, and goes with it
     rad=0;for(let i=1;i<=5;i++)document.documentElement.classList.toggle("r"+i,false);$("rad").hidden=true;
     $("disp").setAttribute("scale","0");
@@ -706,11 +713,15 @@ const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return he
         if(img&&img.width)gf.drawImage(img,sx,0,sw,MH,-mw/2,-h,mw,h);
         if(w.kind){const tag="IR-"+w.kind,tw=gf.measureText(tag).width,fs=max(10,.035*pw);
           gf.fillStyle="#c5b896";gf.fillRect(mw/2-.01*pw,-h-fs*.2,tw+.02*pw,fs*1.3);gf.fillStyle=INK;gf.fillText(tag,mw/2,-h+fs*.85)}}
-      gf.restore();
-      // what it says, on a scrap above where it was, upright, fading
-      if(w.said&&t-w.said.at<1.8){const fs=max(10,.035*pw),tw=gf.measureText(w.said.text).width,ty=oy+dy*dist-h-fs*1.8;
-        gf.globalAlpha=min(1,(1.8-(t-w.said.at))/.4);gf.fillStyle="#c5b896";gf.fillRect(x-tw/2-.01*pw,ty-fs,tw+.02*pw,fs*1.35);
-        gf.fillStyle=INK;gf.fillText(w.said.text,x-tw/2,ty);gf.globalAlpha=1}}};
+      gf.restore()}
+    // what they say, on scraps over the ring where it was said, upright, for four seconds
+    // and then fading, whatever became of the sayer; one is set above any it would cover
+    const fs=max(10,.035*pw),hh=fs*1.35,put=[];
+    for(const s of scraps){const left=SAY-(t-s.at);if(left<=0)continue;
+      const[dx,dy]=dir(s.deg),wd=gf.measureText(s.text).width+.02*pw,x=ox+dx*ring-wd/2;let y=oy+dy*ring-h-fs*2.8;
+      while(put.some(r=>x<r[0]+r[2]&&r[0]<x+wd&&y<r[1]+hh&&r[1]<y+hh))y-=hh*1.15;put.push([x,y,wd]);
+      gf.globalAlpha=min(1,left/.6);gf.fillStyle="#c5b896";gf.fillRect(x,y,wd,hh);
+      gf.fillStyle=INK;gf.fillText(s.text,x+.01*pw,y+fs);gf.globalAlpha=1}};
 const ask=()=>{if(!queued){queued=1;requestAnimationFrame(()=>{queued=0;look()})}};
 const look=()=>{
   const dpr=devicePixelRatio||1,full=85*CM;

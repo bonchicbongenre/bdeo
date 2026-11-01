@@ -186,15 +186,17 @@ What bumsf.art does. A golf pass must keep every line true.
     taken. The beam reaches only the first thing waiting on its lane; what is behind
     waits its turn, untouched. A mouse met by a beam of the wrong colour likes it ("ah, i like your farts,
     kot", and others in turn) and walks in; one blown away sometimes says so ("oh no,
-    a stinky fart!", and others). A game runs from a press on the stage until three
+    a stinky fart!", and others). What a mouse says stays over its lane's ring for 4
+    s and then fades, whatever became of the mouse. A game runs from a press on the stage until three
     mice in a row are let in (a mouse blown away begins the count again; bananas and
     carrots do not count);
     then the procession stops and a scrap of paper gives the score: mice blown away,
     bananas and carrots, and the longest run blown away in a row; the next press
     begins a new game. An IR-B let in does not count, against the run or the score.
     Radness, for the game (a new game begins without it): a point for each banana,
-    and a point for each round of the song (its fifteen notes) in which no mouse that
-    counts gets in; the label says it. An IR-B cannot be hurt without radness, and
+    and a point for each chain of mice blown away in a row, six for the first, then
+    seven more, then eight, and on; a mouse that counts let in breaks the chain, an
+    IR-B does not; the label says it. An IR-B cannot be hurt without radness, and
     with N points needs 0.3 s over N of loud beam. With radness the game hardens: the
     eighth shortens to 1/(1 + 0.15 N) s; from two points a line's notes alternate
     over two lanes, from four over three; from three there are five lanes, ten
