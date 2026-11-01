@@ -156,7 +156,14 @@ What bumsf.art does. A golf pass must keep every line true.
     weakly; Pletneva, 2021). On a narrow screen the print stands at the right, no
     taller than the screen, the lanes under and beside it, and under them a line
     saying how to play and pads that stand for the keys (turn, and teal, yellow,
-    red, each held while touched); the knobs and the label follow.
+    red, each held while touched); the knobs and the label follow. A turn pad held
+    keeps turning, a step after a quarter second and every 80 ms after. A lane
+    touched (or clicked, on any screen) aims the bum down it, and a finger drawn
+    across the lanes turns it lane to lane, so that one hand can hold a colour while
+    the other picks the lane; a touch on the bum's window there still bears down.
+    Where the phone can tell its tilt, a button under the stage turns tilting on
+    (some phones ask first): rolled left or right from however it was held, the bum
+    turns a lane for each ten degrees, until tilting is tapped off.
 17. On a wide screen the print stands high at the right of a stage, the knobs at the
     top left with a guide under them, how to play (open at first, to be folded): a
     line saying it, and the keys as caps, s, d and f in teal, yellow and red, each

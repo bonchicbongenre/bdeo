@@ -95,7 +95,10 @@ html.r3 #cat{filter:url(#warp)}
    to turn and to hold in place of keys */
 main{position:relative}
 #cat{width:min(58%,calc((100svh - 3rem)*1280/1647));margin:0 0 48% auto}
-#field{display:block;position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;cursor:auto}
+#field{display:block;position:absolute;left:0;top:0;width:0;height:0;touch-action:none;cursor:pointer;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+/* the field lies over the rest of the stage; what is on the stage stands above it */
+.howto,.pads,.side,.label{position:relative;z-index:1}
 #score,#keys{display:none}
 #score:not([hidden]){display:block}
 .pads{display:flex;gap:.5rem;margin:0 0 .5rem}
@@ -152,7 +155,7 @@ kbd.on{transform:translateY(2px);box-shadow:none;outline:2px solid var(--ink);ou
 </figure>
 <canvas id="field" aria-hidden="true"></canvas>
 <p id="score" aria-live="polite" hidden></p>
-<p class="howto">Turn the bum down a mouse&rsquo;s lane and, as it reaches its ring, hold its colour.</p>
+<p class="howto">Touch a mouse&rsquo;s lane, or turn the bum down it, and as it reaches its ring hold its colour. <button id="tilt" type="button" hidden>Or tilt the phone to aim.</button></p>
 <div class="pads" id="pads" hidden>
 <button class="turn" data-k="h" aria-label="turn counter-clockwise">&larr;</button>
 <button class="turn" data-k="l" aria-label="turn clockwise">&rarr;</button>
@@ -169,7 +172,7 @@ kbd.on{transform:translateY(2px);box-shadow:none;outline:2px solid var(--ink);ou
 <input id="q" type="range" min="0.6" max="1.5" step="0.01" value="1" autocomplete="off">
 </div>
 <details id="keys" open><summary>how to play</summary>
-<p class="how">Mice walk the lanes to a song. Turn the bum down a mouse&rsquo;s lane and, as it reaches its ring, hold the key of its colour.</p>
+<p class="how">Mice walk the lanes to a song. Turn the bum down a mouse&rsquo;s lane, or click the lane, and as it reaches its ring hold the key of its colour.</p>
 <dl><dt><kbd id="cap-s" class="k0">s</kbd> <kbd id="cap-d" class="k1">d</kbd> <kbd id="cap-f" class="k2">f</kbd></dt><dd>hold to fart teal, yellow, red; another while held changes it</dd>
 <dt><kbd id="cap-h">&larr;</kbd> <kbd id="cap-l">&rarr;</kbd> &nbsp;h l</dt><dd>turn the bum</dd>
 <dt><kbd id="cap-space">space</kbd></dt><dd>hold to fart at the knob&rsquo;s push</dd>
@@ -882,10 +885,45 @@ addEventListener("keydown",e=>{const k=named(e),tag=e.target.tagName||"";
   if(keyDown(k,e.shiftKey))e.preventDefault()});
 addEventListener("keyup",e=>keyUp(named(e)));
 addEventListener("blur",letGo);
-for(const b of $("pads").children){const k=b.dataset.k;
-  b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture&&b.setPointerCapture(e.pointerId);keyDown(k)};
-  b.onpointerup=b.onpointercancel=()=>keyUp(k);b.oncontextmenu=e=>e.preventDefault()}
+// a turn pad held keeps turning, a step every 80 ms after the first quarter second, as a
+// held key repeats
+for(const b of $("pads").children){const k=b.dataset.k,turns=k=="h"||k=="l";let again=0;
+  const more=()=>{keyDown(k);again=setTimeout(more,80)};
+  b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture&&b.setPointerCapture(e.pointerId);keyDown(k);
+    if(turns){clearTimeout(again);again=setTimeout(more,250)}};
+  b.onpointerup=b.onpointercancel=()=>{clearTimeout(again);keyUp(k)};b.oncontextmenu=e=>e.preventDefault()}
 $("pads").hidden=false;
+// The stage itself: a touch on a lane aims the bum down it, the lane nearest the finger,
+// and the bum follows the finger from lane to lane while it is held, so that one hand
+// can hold a colour and the other pick the lane. The stage lies over the bum's own
+// window; a touch there bears down, as the window does.
+const grips={},
+  inWin=e=>{const r=win.getBoundingClientRect();return e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom},
+  laneAt=e=>{const L=lay(),r=FIELD.getBoundingClientRect(),vx=e.clientX-r.left-L.ax,vy=e.clientY-r.top-(L.ay-L.top),
+      d=Math.atan2(-vx,vy)*180/PI,ls=lanesNow();
+    return d<ls[0]-20||d>ls[ls.length-1]+20?null:ls.reduce((a,b)=>abs(b-d)<abs(a-d)?b:a)},
+  aimAt=e=>{const d=laneAt(e);if(d!=null&&d!=aim){aim=d;point()}};
+FIELD.onpointerdown=e=>{e.preventDefault();FIELD.setPointerCapture&&FIELD.setPointerCapture(e.pointerId);
+  grips[e.pointerId]=inWin(e)?"win":"lane";if(grips[e.pointerId]=="win")hold(true);else aimAt(e)};
+FIELD.onpointermove=e=>{if(grips[e.pointerId]=="lane")aimAt(e)};
+FIELD.onpointerup=FIELD.onpointercancel=e=>{if(grips[e.pointerId]=="win")hold(false);delete grips[e.pointerId]};
+FIELD.oncontextmenu=e=>e.preventDefault();
+// Tilting, where the phone can tell it and the visitor turns it on: rolled left or right
+// from however it was held when turned on, the bum turns to the lane that far over, a
+// lane for each ten degrees past the middle one. Turned on by a button under the stage,
+// since some phones ask the visitor first; on its side, the phone's other axis is read.
+let tilting=false,listening=false,poise=null;
+const TB=$("tilt"),
+  leaned=e=>{if(!tilting||e.gamma==null)return;const o=globalThis.screen&&screen.orientation,a=o?o.angle:0,
+      roll=a==90?e.beta:a==270||a==-90?-e.beta:a==180?-e.gamma:e.gamma;
+    if(poise==null)poise=roll;const d=60-(roll-poise),to=lanesNow().reduce((x,y)=>abs(y-d)<abs(x-d)?y:x);
+    if(to!=aim){aim=to;point()}},
+  tiltOn=()=>{if(!listening){addEventListener("deviceorientation",leaned);listening=true}
+    tilting=true;poise=null;TB.textContent="Tilting; tap to stop."};
+TB.onclick=()=>{if(tilting){tilting=false;TB.textContent="Or tilt the phone to aim.";return}
+  const D=globalThis.DeviceOrientationEvent;
+  if(D&&D.requestPermission)D.requestPermission().then(s=>{if(s=="granted")tiltOn()},()=>{});else tiltOn()};
+TB.hidden=!(globalThis.DeviceOrientationEvent&&matchMedia("(pointer:coarse)").matches);
 reach();$("p").value=String(travelAt(target/CM));knob(target/CM);
 $("knob").hidden=false;win.hidden=false;
 
