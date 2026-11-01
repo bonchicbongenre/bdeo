@@ -164,11 +164,15 @@ What bumsf.art does. A golf pass must keep every line true.
     Where the phone can tell its tilt, a button under the stage turns tilting on
     (some phones ask first): rolled left or right from however it was held, the bum
     turns a lane for each ten degrees, until tilting is tapped off.
-17. On a wide screen the print stands high at the right of a stage, the knobs at the
-    top left with a guide under them, how to play (open at first, to be folded): a
-    line saying it, and the keys as caps, s, d and f in teal, yellow and red, each
-    cap pressed while its key is held, the
-    label under the print, and the procession comes, to a song: "Chizhik-pyzhik", the
+17. On a wide screen the page is the window's height and does not scroll: the print
+    stands high at the right of a stage, 0.72 of the window's height less its
+    margins, leaving the lanes their room under the bum; the label stands in a
+    column beside it, the credit at that column's foot, so that what the label gains
+    in a game does not lengthen the page; the knobs at the top left with a guide
+    under them, how to play (open at first, to be folded; folded at first on a
+    stage about 1,000 pixels across, where it and the lanes would meet): a line
+    saying it, and the keys as caps, s, d and f in teal, yellow and red, each cap
+    pressed while its key is held; and the procession comes, to a song: "Chizhik-pyzhik", the
     Russian comic folk song, in Wikipedia's transcription after Rappaport (2012), 2/4,
     F major, slowly, an eighth a second. From a press, each of its notes is something
     walking six seconds down one of three lanes that fan back from the bum at the
@@ -218,3 +222,24 @@ What bumsf.art does. A golf pass must keep every line true.
     motion, the page tints and holds still. The other's and the kot's lines too each
     have others, taken in turn. Its draws are its own, so neither the
     sound nor the kot's coin moves when it walks.
+18. A fart is drawn into the room too. What is heard: rings go out from the bum
+    through the room behind the page, a ring for every twelfth cycle or so of its
+    tone (5 to 12 a second; dashed, 6 a second, for a hiss), as strong as the sound
+    going out (the loudest sample of the last 10 ms, kept beside the valve's own
+    history), crinkled with more lobes the higher the tone; the print trembles at a
+    loud one; and its word stands over the haunch, edged in the print's paper,
+    "brrr" for as long as it goes and "ap!" at its end, "pfff" and "..." for one
+    only hissed, its letters jumping with the tone. The beam is a cone that widens
+    toward the rings, its edges rippling faster the higher the tone and deeper the
+    louder, with puffs carried down it, under what walks. What is smelt: each fart's
+    cloud, as wide as the nose's model smells it, out to where its leading gas
+    stands at its threshold (sqrt(4 K t ln e) for an excess e at its middle: a 107
+    ml passage at Suarez's means is smelt out to 0.79 m at 28.7 s and gone at 78 s),
+    a metre drawn as 1.2 times the print's width (an estimate); carried a little
+    along the aim and rising, which is drawn so, the model's air being still; tinted
+    by its gas, sulphur-yellow for hydrogen sulphide, green for methanethiol, pink
+    for dimethyl sulphide; stink lines rising over it; and flies about a vonyuchaya
+    one. Over everything, faint enough that the mice show through. In the page's own
+    ink, light in the dark. Asked for less motion: no rings, no trembling, the word
+    still, the cloud still and plain. None of it is measured but the sound's
+    strength and the cloud's size.

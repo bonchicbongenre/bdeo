@@ -86,6 +86,9 @@ html.r5 body{animation-duration:8s}html.r5 main{animation-duration:12s}html.r5 #
 /* and the old desktops' screensavers behind the page, and the print warped (the script) */
 #saver{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;cursor:auto;display:none}
 html.r2 #saver{display:block}
+/* the fart in the room: its rings behind the page, its cloud and its word over it */
+#room,#reek{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#room{z-index:0}#reek{z-index:2}
 main,.by{position:relative;z-index:1}
 html.r3 #cat{filter:url(#warp)}
 @media (prefers-reduced-motion:reduce){html.r2 #saver{display:none}html.r3 #cat{filter:none}
@@ -122,26 +125,32 @@ kbd.on{transform:translateY(2px);box-shadow:none;outline:2px solid var(--ink);ou
 .howto{margin:0 0 .4rem;font-size:.85rem;line-height:1.35}
 #score{position:relative;z-index:1;margin:0 0 .5rem;padding:.5em .8em;font-style:italic;line-height:1.4;
   font-size:.85rem;color:#523f35;background:#c5b896}
-/* wide: the stage. The print high at the right, the label under it, the knobs at the
-   top left; the field, where the lanes run back from the bum, under and beside it all */
+/* wide: the stage, the window's height and no more. The print high at the right, 0.72
+   of the window's height less its margins, which leaves the lanes their room under the
+   bum; the label in a column beside it and the credit at that column's foot, so that
+   what the label gains in a game never makes the page scroll; the knobs at the top
+   left; the field, where the lanes run back from the bum, under and beside it all */
 @media (min-width:48rem) and (min-aspect-ratio:1/1) and (min-height:34rem){
-  body{--plate:min(calc((100svh - 18rem)*1280/1647),calc(100vw - 32px - 24rem))}
+  body{--side:13rem;--pad:clamp(1rem,5svh,3rem);padding:var(--pad) 16px;position:relative;
+    --plate:min(calc((100svh - 2*var(--pad))*.72*1280/1647),calc(100vw - 32px - 24rem - var(--side) - 6rem))}
   main,.by{max-width:none}
-  main{display:grid;grid-template-columns:1fr var(--plate);grid-template-rows:auto 1fr;gap:0 3rem}
-  #cat{grid-column:2;grid-row:1;width:auto;margin:0}
+  main{display:grid;grid-template-columns:1fr var(--plate) var(--side);gap:0 3rem}
+  #cat{grid-column:2;grid-row:1;width:auto;margin:0;align-self:start}
   .pads,.howto{display:none}
-  .side{grid-column:1;grid-row:1;max-width:24rem;position:relative;z-index:1}
-  .label{grid-column:2;grid-row:2;margin-top:1rem;position:relative;z-index:1}
+  .side{grid-column:1;grid-row:1;max-width:24rem}
+  .label{grid-column:3;grid-row:1;margin:0;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:.8rem}
   .knob{margin-top:0}
   #score{position:absolute;left:8%;top:52%;margin:0;font-size:inherit}
   #keys{display:block;margin-top:1.6rem;font-size:.85rem;line-height:1.4}
-  .by{margin-top:1.5rem}
+  .by{position:absolute;right:16px;bottom:var(--pad);width:var(--side);margin:0;text-align:left}
 }
 </style>
 </head>
 <body>
 <svg class="sr" aria-hidden="true" focusable="false"><filter id="warp"><feTurbulence id="turb" type="fractalNoise" baseFrequency=".006 .01" numOctaves="2" seed="7"/><feDisplacementMap id="disp" in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
 <canvas id="saver" aria-hidden="true"></canvas>
+<canvas id="room" aria-hidden="true"></canvas>
+<canvas id="reek" aria-hidden="true"></canvas>
 <main>
 <figure id="cat">
 <img src="cat.webp" width="1280" height="1647" draggable="false" alt="A hand-coloured Russian woodcut: a great striped cat sits looking out with round orange eyes, its tail curled in a red spiral on its haunch, flowers about it. The caption reads: Kot Kazanskoi, a um Strakhanskoi, razum Sibirskoi, slavno zhil, slatko el, slapko bzdel. The Cat of Kazan, with the mind of Astrakhan and the wit of Siberia, lived grandly, ate sweetly, farted weakly.">
@@ -325,12 +334,12 @@ const flow=(ps,rate,n,gain)=>{X=0;V=0;pg(ps,0,0);let u0=U,u1=U,steps=0;
 // estimates); while a game is on, over a twentieth of a second both ways (a game's
 // speed, not a body's, so that a song can be kept up with). Every eighth step, 48,000
 // times a second, the valve's state is kept for half a second; the pictures look back
-// into that.
+// into that, with the loudest sound sent out over those eight steps.
 const G8=8,GRID=RATE/G8,HN=GRID/2,RISE=.25,FALL=.15,QUICK=.05,
-  hx=new Float64Array(HN),hv=new Float64Array(HN),hp=new Float64Array(HN);
-let n=0,P=0,target=54*CM,held=false,queue=[],du0=0,du1=0,s0=0,s1=0,w=0,seed=1,
+  hx=new Float64Array(HN),hv=new Float64Array(HN),hp=new Float64Array(HN),ha=new Float32Array(HN);
+let n=0,P=0,target=54*CM,held=false,queue=[],du0=0,du1=0,s0=0,s1=0,blk=0,w=0,seed=1,
   fart=false,rasp=0,shut=0,ninja=0,heard=0,puffs=[],wall=0,run=0,ended=-Infinity,quip="",by="",quips=0,clench=false,clenched=0,peak=0;
-const keep=()=>{const g=n/G8%HN;hx[g]=X;hv[g]=V;hp[g]=PE},
+const keep=()=>{const g=n/G8%HN;hx[g]=X;hv[g]=V;hp[g]=PE;ha[g]=blk;blk=0},
   // what is heard: the rate of change of the flow, which is what a small source
   // radiates, and over it the hiss of the jet, white, in proportion to the flow (an
   // estimate); a new hiss value 48,000 times a second. One fixed gain, one fixed level
@@ -372,12 +381,12 @@ const keep=()=>{const g=n/G8%HN;hx[g]=X;hv[g]=V;hp[g]=PE},
         if(quip)quips++;
         puffs.push([wall+(n-from)/RATE,outs]);outs=[0,0,0]}}
     if(n%G8==0){seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;seed>>>=0;w=seed/2147483648-1;keep()}
-    s0=s1;s1=LIMIT*Math.tanh(LEVEL*(GAIN*(du1-du0)*RATE+HISS*du1*w))},
+    s0=s1;s1=LIMIT*Math.tanh(LEVEL*(GAIN*(du1-du0)*RATE+HISS*du1*w));blk=max(blk,abs(s1))},
   heldIn=()=>{if(peak>=P_OPEN-2*CM){clenched++;if(store<BAG)draw()}clench=false},
   still=()=>!held&&!queue.length&&P<1&&x02+X<=0&&abs(V)<1e-4,
   // the wall settled where it rests under no push, and the kept past set to it
-  settle=()=>{X=rest(0);V=0;pg(0,X,V);du0=du1=U;for(let g=0;g<HN;g++){hx[g]=X;hv[g]=V;hp[g]=0}},
-  reset=()=>{n=0;P=PE=0;held=false;queue=[];s0=s1=0;w=0;seed=1;luck=LUCK;fart=false;rasp=shut=0;run=0;ended=-Infinity;clench=false;peak=0;
+  settle=()=>{X=rest(0);V=0;pg(0,X,V);du0=du1=U;for(let g=0;g<HN;g++){hx[g]=X;hv[g]=V;hp[g]=0;ha[g]=0}},
+  reset=()=>{n=0;P=PE=0;held=false;queue=[];s0=s1=blk=0;w=0;seed=1;luck=LUCK;fart=false;rasp=shut=0;run=0;ended=-Infinity;clench=false;peak=0;
     store=V0=0;dvs=[0,0,0];outs=[0,0,0];settle()};
 reset();
 
@@ -693,10 +702,19 @@ const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return he
       gf.beginPath();gf.moveTo(ox+dx*(ring+.05*pw),oy+dy*(ring+.05*pw));gf.lineTo(ox+dx*far,oy+dy*far);gf.stroke();
       gf.setLineDash([]);gf.strokeStyle=on?BANDS[band(target)]:RED;gf.lineWidth=(on?.011:.007)*pw;
       gf.beginPath();gf.arc(ox+dx*ring,oy+dy*ring,.04*pw,0,2*PI);gf.stroke()});
-    // the beam: the air going out along the aim, in the colour of the push asked for
-    if(edge(g)>0){const a=tilt*PI/180,dx=-Math.sin(a),dy=Math.cos(a),r=ring+.08*pw;
-      gf.globalAlpha=.55;gf.strokeStyle=BANDS[band(target)];gf.lineWidth=.035*pw;
-      gf.beginPath();gf.moveTo(ox+dx*.06*pw,oy+dy*.06*pw);gf.lineTo(ox+dx*r,oy+dy*r);gf.stroke();gf.globalAlpha=1}
+    // the beam: the air going out along the aim, in the colour of the push asked for, a
+    // cone widening as it goes, its edges rippling with the sound going out (faster the
+    // higher the tone, deeper the louder), and puffs carried down it; under what walks
+    if(edge(g)>0){const a=tilt*PI/180,dx=-Math.sin(a),dy=Math.cos(a),r=ring+.08*pw,s0=.06*pw,N=32,
+        deep=calm?0:.12+.45*min(1,sqrt(lvl/.6)),ph=calm?0:t*(hum>0?hum/6:18),
+        half=(i,k)=>(.008+.042*i/N)*pw*(1+deep*Math.sin(i*1.1-ph+k));
+      gf.globalAlpha=.5;gf.fillStyle=BANDS[band(target)];gf.beginPath();
+      for(let i=0;i<=N;i++){const s=s0+(r-s0)*i/N,hw=half(i,0);gf.lineTo(ox+dx*s-dy*hw,oy+dy*s+dx*hw)}
+      for(let i=N;i>=0;i--){const s=s0+(r-s0)*i/N,hw=half(i,1.9);gf.lineTo(ox+dx*s+dy*hw,oy+dy*s-dx*hw)}
+      gf.closePath();gf.fill();
+      if(!calm){gf.globalAlpha=.35;for(let k=0;k<6;k++){const u=(t*1.6+k/6)%1,s=s0+(r-s0)*u;
+        gf.beginPath();gf.arc(ox+dx*s,oy+dy*s,(.01+.03*u)*pw,0,2*PI);gf.fill()}}
+      gf.globalAlpha=1}
     // what walks: along its lane to the ring, a hop a beat; waiting there, shaking
     // while the beam works on it, the ring filling in its colour, and the next on its
     // lane stopping a step behind; past it, into the bum; blown away, back up the lane,
@@ -731,6 +749,78 @@ const roll=()=>{herd^=herd<<13;herd^=herd>>>17;herd^=herd<<5;herd>>>=0;return he
       while(put.some(r=>x<r[0]+r[2]&&r[0]<x+wd&&y<r[1]+hh&&r[1]<y+hh))y-=hh*1.15;put.push([x,y,wd]);
       gf.globalAlpha=min(1,left/.6);gf.fillStyle="#c5b896";gf.fillRect(x,y,wd,hh);
       gf.fillStyle=INK;gf.fillText(s.text,x+.01*pw,y+fs);gf.globalAlpha=1}};
+// The fart drawn into the room, for the eye. What is heard: rings going out from the bum
+// through the room behind the page, a ring for every so many cycles of the tone (dashed
+// for a hiss), as strong as the sound going out (the loudest sample of the last 10 ms),
+// crinkled by its pitch; the print trembling at a loud one; and the word for it over the
+// haunch, "brrr" for as long as it goes and "ap!" at its end, "pfff" and "..." for one
+// only hissed. What is smelt: each fart's cloud as wide as the nose model smells it, out
+// to where its leading gas stands at its threshold, sqrt(4 K t ln e) for an excess e at
+// its middle (Carslaw's puff, above), a metre drawn as 1.2 times the print's width (an
+// estimate), carried a little along the aim and rising (drawn so; the model's air is
+// still), tinted by its gas, stink lines rising over it, and flies at a vonyuchaya one.
+// None of it is measured but the sound's strength and the cloud's size. Those who ask
+// for less motion get the word and the cloud, still.
+const ROOM=$("room"),gr=ROOM.getContext("2d"),REEK=$("reek"),gq=REEK.getContext("2d"),
+  TINTS=["#b3a640","#76884a","#b48596"],M_PX=1.2,
+  // a fart's cloud tau seconds after: its leading gas, the excess at its middle, and how
+  // far out it is smelt (m)
+  cloudOf=(dv,tau)=>{let lead=0,e=0;for(let g=0;g<3;g++){const x=dv[g]/(4*PI*KD*tau)**1.5;if(x>e){e=x;lead=g}}
+    return[lead,e,e>1?sqrt(4*KD*tau*Math.log(e)):0]},
+  // the word for a fart len seconds on: loud or not, over or not
+  wordFor=(loud,len,done)=>loud?"b"+"r".repeat(min(10,2+floor(len/.08)))+(done?"ap!":""):"p"+"f".repeat(min(8,2+floor(len/.15)))+(done?"...":"");
+let rings=[],lastRing=-1,blurt=null,airing=0,lvl=0,hum=0;
+const hearing=(now,song)=>{const tw=performance.now()/1e3;let lv=0;
+    if(!asleep)for(let i=0;i<480;i++)lv=max(lv,ha[at(now-i)]);
+    lvl=lv;hum=song.hz;
+    if(!calm&&lv>.002&&tw-lastRing>1/(hum>0?min(12,max(5,hum/12)):6)){rings.push({t0:tw,a:min(1,sqrt(lv/.6)),hz:hum});lastRing=tw}
+    if(fart&&!asleep){if(!blurt||blurt.done)blurt={t0:tw,loud:false,done:false,end:0,len:0};blurt.loud=blurt.loud||rasp>=HEARD;blurt.len=tw-blurt.t0}
+    else if(blurt&&!blurt.done){blurt.done=true;blurt.end=tw;blurt.loud=blurt.loud||rasp>=HEARD}
+    if(rings.length||blurt||puffs.length)wake()},
+  wake=()=>{if(!airing)airing=requestAnimationFrame(breathe)},
+  breathe=()=>{airing=0;
+    const W=innerWidth,H=innerHeight,d=min(2,devicePixelRatio||1),t=performance.now()/1e3,c=$("cat"),cr=c.getBoundingClientRect(),
+      pw=c.clientWidth,bx=cr.left+win.offsetLeft+.5*win.offsetWidth,by=cr.top+win.offsetTop+.575*win.offsetHeight,loud=asleep?0:lvl,
+      // what is drawn on the page takes the page's ink, light in the dark
+      ink=getComputedStyle(document.documentElement).getPropertyValue("--ink").trim()||INK;
+    for(const[cv,x]of[[ROOM,gr],[REEK,gq]]){if(cv.width!=round(W*d)||cv.height!=round(H*d)){cv.width=round(W*d);cv.height=round(H*d)}
+      x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H)}
+    // the rings, behind the page
+    rings=rings.filter(q=>t-q.t0<1.6);
+    for(const q of rings){const age=t-q.t0,r0=.06*pw+age*.9*pw,lobes=q.hz>0?min(14,max(5,round(q.hz/15))):9,ph=q.t0*7;
+      gr.globalAlpha=.45*q.a*(1-age/1.6);gr.strokeStyle=ink;gr.lineWidth=(.003+.008*q.a)*pw;gr.setLineDash(q.hz>0?[]:[.01*pw,.012*pw]);
+      gr.beginPath();
+      for(let i=0;i<=96;i++){const th=i/96*2*PI,rr=r0*(1+.025*Math.sin(lobes*th+ph)),x=bx+rr*Math.cos(th),y=by+rr*Math.sin(th);i?gr.lineTo(x,y):gr.moveTo(x,y)}
+      gr.stroke()}
+    gr.setLineDash([]);gr.globalAlpha=1;
+    // the clouds, over everything, faint enough to see the mice through
+    const aa=tilt*PI/180,ax=-Math.sin(aa),ay=Math.cos(aa);let reeking=false;
+    for(const[t0,dv]of puffs){const tau=t-t0;if(tau<=0)continue;const[lead,e,rm]=cloudOf(dv,tau);if(!rm)continue;reeking=true;
+      const R=rm*M_PX*pw,carry=.15*pw*(1-Math.exp(-tau)),cx=bx+ax*carry,cy=by+ay*carry-.008*pw*tau,s=min(1,Math.log10(e)/3);
+      gq.globalAlpha=.04+.16*s;gq.fillStyle=TINTS[lead];gq.beginPath();
+      for(let k=0;k<7;k++){const a=k/7*2*PI+(calm?0:tau*.15),px=cx+Math.cos(a)*.42*R,py=cy+Math.sin(a)*.3*R;gq.moveTo(px+.55*R,py);gq.arc(px,py,.55*R,0,2*PI)}
+      gq.fill();
+      if(calm)continue;
+      gq.globalAlpha=.5*s;gq.strokeStyle=ink;gq.lineWidth=max(1,.005*pw);gq.beginPath();
+      for(const fx of[-.35,0,.35])for(let i=0;i<=20;i++){const u=i/20,x=cx+fx*R+Math.sin(u*9-t*4+fx*5)*.06*R,y=cy+.2*R-u*1.1*R;i?gq.lineTo(x,y):gq.moveTo(x,y)}
+      gq.stroke();
+      if(max(...dv)>=FAR)for(let k=0;k<3;k++){const p=t*(2.3+.7*k)+2.1*k,fx=cx+Math.sin(1.7*p)*.6*R,fy=cy+Math.cos(1.3*p+k)*.45*R,
+          u=max(2.5,.011*pw),fl=Math.sin(60*t+k)*.4*u;
+        gq.globalAlpha=.9;gq.fillStyle=ink;gq.beginPath();gq.ellipse(fx,fy,1.1*u,.8*u,0,0,2*PI);gq.fill();
+        gq.globalAlpha=.4;gq.beginPath();gq.ellipse(fx-.9*u,fy-u-fl,1.4*u,.75*u,-.6,0,2*PI);gq.ellipse(fx+.9*u,fy-u+fl,1.4*u,.75*u,.6,0,2*PI);gq.fill()}}
+    gq.globalAlpha=1;
+    // the word, over the haunch, edged in the print's paper
+    if(blurt&&blurt.done&&t-blurt.end>1.2)blurt=null;
+    if(blurt){const wd=wordFor(blurt.loud,blurt.len,blurt.done),fs=(blurt.loud?.06+.03*min(1,sqrt(loud/.6)):.04)*pw;
+      gq.save();gq.globalAlpha=blurt.done?1-(t-blurt.end)/1.2:1;gq.translate(bx+.06*pw,by-.3*pw);gq.rotate(-.12);
+      gq.font=`italic ${fs}px "House Book", serif`;gq.lineJoin="round";gq.lineWidth=.2*fs;gq.strokeStyle="#c5b896";gq.fillStyle=blurt.loud?INK:GAS;
+      let x=0;for(let i=0;i<wd.length;i++){const y=calm||blurt.done?0:Math.sin(t*(hum>0?hum/8:20)+1.1*i)*fs*(blurt.loud?.12:.05);
+        gq.strokeText(wd[i],x,y);gq.fillText(wd[i],x,y);x+=gq.measureText(wd[i]).width}
+      gq.restore()}
+    // the print trembling at a loud one
+    const k=calm||loud<.05?0:2.5*min(1,loud/.5);
+    c.style.translate=k?(Math.sin(97*t)*k).toFixed(1)+"px "+(Math.cos(131*t)*k).toFixed(1)+"px":"";
+    if(rings.length||blurt||reeking||k)wake()};
 const ask=()=>{if(!queued){queued=1;requestAnimationFrame(()=>{queued=0;look()})}};
 const look=()=>{
   const dpr=devicePixelRatio||1,full=85*CM;
@@ -811,6 +901,7 @@ const look=()=>{
   gk.globalAlpha=1;gk.strokeStyle=INK;gk.lineWidth=.8*lw;gk.lineJoin="round";
   for(const s of[1,-1]){gk.beginPath();
     rows.forEach((q,y)=>q?(rows[y-1]?gk.lineTo(cx+s*q,y):gk.moveTo(cx+s*q,y)):0);gk.stroke()}
+  hearing(now,song);
   stageLook(now);
   // the herd's count, from the first press on the stage
   if(march||blown+missed+bananas){const s=blown+"&nbsp;blown away, "+missed+"&nbsp;missed"+(bananas?", "+bananas+"&nbsp;banana"+(bananas>1?"s":""):"")+
@@ -924,6 +1015,9 @@ TB.onclick=()=>{if(tilting){tilting=false;TB.textContent="Or tilt the phone to a
   const D=globalThis.DeviceOrientationEvent;
   if(D&&D.requestPermission)D.requestPermission().then(s=>{if(s=="granted")tiltOn()},()=>{});else tiltOn()};
 TB.hidden=!(globalThis.DeviceOrientationEvent&&matchMedia("(pointer:coarse)").matches);
+// a stage too narrow for the guide and the lanes both, about 1,000 pixels across, opens
+// with the guide folded: its heading stays, to be opened
+if(matchMedia("(min-width:48rem) and (max-width:70rem) and (min-aspect-ratio:1/1) and (min-height:34rem)").matches)$("keys").open=false;
 reach();$("p").value=String(travelAt(target/CM));knob(target/CM);
 $("knob").hidden=false;win.hidden=false;
 
