@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-scheme="celadon">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,15 +52,21 @@ button:focus-visible{outline:1px solid var(--rule);outline-offset:4px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 a{color:var(--acc);text-underline-offset:.15em}
 .by{margin-top:3rem;text-align:right;font-size:.8rem}
-/* schemes: the page in a glaze's wash, its accent the glaze's, in either theme; the dot
+/* schemes: the page in a glaze's wash, celadon's first, in either theme; the accent the
+   glaze's own hue and chroma, its lightness taken down (light) or up (dark) from the
+   house's, which is set for the paper, until it reads at 4.6:1 on the wash; the dot
    after the theme button wears the colour of the scheme to come */
 :root{--acc:var(--rust-accent,var(--ink))}
-html[data-scheme=rust]{--acc:var(--rust-accent)}html[data-scheme=rust] body{background:var(--rust-wash)}
-html[data-scheme=celadon]{--acc:var(--ru-accent)}html[data-scheme=celadon] body{background:var(--ru-wash)}
-html[data-scheme=jun]{--acc:var(--jun-accent)}html[data-scheme=jun] body{background:var(--jun-wash)}
-html[data-scheme=gold]{--acc:var(--gold-accent)}html[data-scheme=gold] body{background:var(--gold-wash)}
+html[data-scheme=rust]{--ah:40.5;--al:.489;--ad:.667}html[data-scheme=rust] body{background:var(--rust-wash)}
+html[data-scheme=celadon]{--ah:155.9;--al:.478;--ad:.658}html[data-scheme=celadon] body{background:var(--ru-wash)}
+html[data-scheme=jun]{--ah:224.6;--al:.481;--ad:.66}html[data-scheme=jun] body{background:var(--jun-wash)}
+html[data-scheme=gold]{--ah:74.8;--al:.486;--ad:.665}html[data-scheme=gold] body{background:var(--gold-wash)}
+html[data-scheme]:not([data-scheme=paper]){--acc:oklch(var(--al) var(--lift) var(--ah))}
+@media (prefers-color-scheme:dark){html:not([data-theme=light])[data-scheme]:not([data-scheme=paper]){--acc:oklch(var(--ad) var(--lift) var(--ah))}}
+html[data-theme=dark][data-scheme]:not([data-scheme=paper]){--acc:oklch(var(--ad) var(--lift) var(--ah))}
 .btns{display:flex;align-items:center;gap:.7rem}
-#glaze{width:.62em;height:.62em;border-radius:50%;background:var(--rust-base)}
+#glaze{width:.62em;height:.62em;border-radius:50%;background:var(--jun-base)}
+#glaze[data-next=rust]{background:var(--rust-base)}
 #glaze[data-next=paper]{background:var(--paper);box-shadow:0 0 0 1px var(--rule)}
 #glaze[data-next=celadon]{background:var(--ru-base)}#glaze[data-next=jun]{background:var(--jun-base)}
 #glaze[data-next=gold]{background:var(--gold-base)}
@@ -892,7 +898,7 @@ T.onclick=()=>{root.dataset.theme=dark()?"light":"dark";turn()};
 turn();T.hidden=false;
 // schemes: the plain paper, then the rust, celadon, jun and gold glazes' washes, and
 // round again; the dot wears the scheme to come; nothing is kept
-const SCHEMES=["paper","rust","celadon","jun","gold"],GZ=$("glaze");let scheme=0;
+const SCHEMES=["celadon","jun","gold","paper","rust"],GZ=$("glaze");let scheme=0;
 const tint=()=>{const nx=SCHEMES[(scheme+1)%SCHEMES.length];GZ.dataset.next=nx;GZ.setAttribute("aria-label","colours: "+nx)};
 GZ.onclick=()=>{scheme=(scheme+1)%SCHEMES.length;root.dataset.scheme=SCHEMES[scheme];tint();ask()};
 tint();GZ.hidden=false;

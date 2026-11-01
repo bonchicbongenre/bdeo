@@ -139,9 +139,11 @@ What bumsf.art does. A golf pass must keep every line true.
 14. The page's colours come from the house tokens; the figure and the kot's words,
     being on the print, take the print's. The tab's icon is a bum in the rust glaze.
     Dark mode follows the system until the theme button turns it for the visit; the
-    dot after it turns the page through schemes, the plain paper and then the rust,
-    celadon, jun and gold glazes' washes, each with its glaze's accent, the dot
-    wearing the scheme to come; nothing is kept. Resizing redraws.
+    page opens in the celadon glaze's wash, and the dot after it turns it through
+    the jun and gold glazes', the plain paper and the rust glaze's, each glaze's
+    accent its own hue and chroma made darker (light) or lighter (dark) until it
+    reads at 4.6:1 on its wash, the dot wearing the scheme to come; nothing is kept.
+    Resizing redraws.
 15. The label gives the page's own size, read live. Without script the print stands
     alone, the label says the valve is shut, and there are no knobs. The console
     gives one word and what it means.
